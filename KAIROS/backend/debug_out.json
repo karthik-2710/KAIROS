@@ -1,0 +1,258 @@
+{
+  "data": [
+    {
+      "interval": {
+        "from": "2026-06-21T00:00:00Z",
+        "to": "2026-06-22T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.03343643993139267,
+                "max": 0.45865511894226074,
+                "mean": 0.17434641189575262,
+                "stDev": 0.07283175404111845,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 1.0,
+                "max": 1.0,
+                "mean": 1.0,
+                "stDev": 0.0,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-06-26T00:00:00Z",
+        "to": "2026-06-27T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.04149441048502922,
+                "max": 0.32849863171577454,
+                "mean": 0.14957852229699511,
+                "stDev": 0.04393444057219981,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 1.0,
+                "max": 1.0,
+                "mean": 1.0,
+                "stDev": 0.0,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-06-28T00:00:00Z",
+        "to": "2026-06-29T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": -0.11227702349424362,
+                "max": 0.9833223819732666,
+                "mean": 0.2114859418737433,
+                "stDev": 0.21558702900932175,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.24560000000000004,
+                "stDev": 0.4304423770959364,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-07-01T00:00:00Z",
+        "to": "2026-07-02T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.07077590376138687,
+                "max": 0.16102978587150574,
+                "mean": 0.1067902338132267,
+                "stDev": 0.011361934481742055,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 1.0,
+                "max": 1.0,
+                "mean": 1.0,
+                "stDev": 0.0,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-07-06T00:00:00Z",
+        "to": "2026-07-07T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": -0.1243957057595253,
+                "max": 0.4269340932369232,
+                "mean": 0.06158996214094685,
+                "stDev": 0.08630467243858574,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 1.0,
+                "max": 1.0,
+                "mean": 1.0,
+                "stDev": 0.0,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-07-11T00:00:00Z",
+        "to": "2026-07-12T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": -0.36958298087120056,
+                "max": 0.7338979840278625,
+                "mean": 0.012569619927762642,
+                "stDev": 0.11226865256622116,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.9957999999999989,
+                "stDev": 0.06467116822819885,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "interval": {
+        "from": "2026-07-16T00:00:00Z",
+        "to": "2026-07-17T00:00:00Z"
+      },
+      "outputs": {
+        "default": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 0.0811476856470108,
+                "max": 0.3236020803451538,
+                "mean": 0.1683903767608101,
+                "stDev": 0.040890827100562084,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        },
+        "cloudMask": {
+          "bands": {
+            "B0": {
+              "stats": {
+                "min": 1.0,
+                "max": 1.0,
+                "mean": 1.0,
+                "stDev": 0.0,
+                "sampleCount": 10000,
+                "noDataCount": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "status": "OK",
+  "geometryPixelCount": 10000
+}

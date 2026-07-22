@@ -1,0 +1,11 @@
+Flask
+Flask-CORS
+python-dotenv
+Werkzeug
+requests
+numpy
+Pillow
+tensorflow
+sentinelhub
+PyJWT
+bcrypt

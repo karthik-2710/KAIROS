@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>KAIROS — AI-Powered Precision Agriculture Platform</title>
+    <meta name="description" content="KAIROS combines satellite imagery, IoT sensors, real-time weather, and AI disease detection to give farmers the right data at the right time for precision agriculture decisions." />
+    <meta name="keywords" content="precision agriculture, AI farming, NDVI, crop disease detection, IoT sensors, satellite imagery, smart farming" />
+    <meta name="author" content="KAIROS AgriIntelligence" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="KAIROS — AI-Powered Precision Agriculture" />
+    <meta property="og:description" content="The Right Data. The Right Time. The Right Decision." />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Prevent FOUC -->
+    <script>
+      const theme = localStorage.getItem('kairos-theme')
+      if (theme) {
+        try {
+          const { state } = JSON.parse(theme)
+          if (state?.isDark) document.documentElement.classList.add('dark')
+        } catch (e) {}
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
