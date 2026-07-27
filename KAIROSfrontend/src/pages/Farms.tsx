@@ -26,6 +26,7 @@ import {
   ArrowRight
 } from 'lucide-react'
 import { FarmMap } from '@/components/ui/FarmMap'
+import { useTranslation } from 'react-i18next'
 
 interface ExtraMetadata {
   owner: string
@@ -38,6 +39,7 @@ interface ExtraMetadata {
 }
 
 export default function Farms() {
+  const { t } = useTranslation()
   const { farms, refetchFarms } = useOutletContext<FarmContextType>()
   const [modalOpen, setModalOpen] = React.useState(false)
   const [editMode, setEditMode] = React.useState(false)
@@ -222,13 +224,13 @@ export default function Farms() {
       {/* Page Header */}
       <div className="flex flex-col justify-between space-y-3 sm:flex-row sm:items-center sm:space-y-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">Farm Registry Center</h1>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">{t("Farm Registry Center")}</h1>
           <p className="text-xs text-slate-500">
-            Manage your registered agricultural land parcels, owner specs, device nodes, and crop parameters.
+            {t("Manage your registered agricultural land parcels, owner specs, device nodes, and crop parameters.")}
           </p>
         </div>
         <Button onClick={handleOpenCreate} className="bg-[#2E7D32] hover:bg-[#1B5E20]">
-          <Plus className="mr-2 h-4 w-4" /> Register Land Parcel
+          <Plus className="mr-2 h-4 w-4" /> {t("Register Land Parcel")}
         </Button>
       </div>
 
@@ -237,7 +239,7 @@ export default function Farms() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Registered Farms</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t("Total Registered Farms")}</span>
               <p className="text-2xl font-black text-slate-900 mt-1">{farms.length}</p>
             </div>
             <div className="h-9 w-9 rounded-lg bg-green-50 text-[#2E7D32] border border-[#DCE3D6]/50 flex items-center justify-center">
@@ -249,8 +251,8 @@ export default function Farms() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Aggregate Acreage</span>
-              <p className="text-2xl font-black text-slate-900 mt-1">{totalAcreage.toFixed(1)} <span className="text-xs font-semibold text-slate-400">Ha</span></p>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t("Aggregate Acreage")}</span>
+              <p className="text-2xl font-black text-slate-900 mt-1">{totalAcreage.toFixed(1)} <span className="text-xs font-semibold text-slate-400">{t("Ha")}</span></p>
             </div>
             <div className="h-9 w-9 rounded-lg bg-green-50 text-[#2E7D32] border border-[#DCE3D6]/50 flex items-center justify-center">
               <Sprout className="h-5 w-5" />
@@ -261,7 +263,7 @@ export default function Farms() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mean Crop Health</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t("Mean Crop Health")}</span>
               <p className="text-2xl font-black text-slate-900 mt-1">{avgHealth}%</p>
             </div>
             <div className="h-9 w-9 rounded-lg bg-green-50 text-[#2E7D32] border border-[#DCE3D6]/50 flex items-center justify-center">
@@ -273,7 +275,7 @@ export default function Farms() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Device Alert Status</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t("Device Alert Status")}</span>
               <p className="text-2xl font-black text-slate-900 mt-1">{activeAlerts}</p>
             </div>
             <div className="h-9 w-9 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center">
@@ -319,15 +321,15 @@ export default function Farms() {
                       </Badge>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 font-semibold">
-                      <span className="flex items-center"><User className="h-3.5 w-3.5 mr-1 text-slate-400" /> Owner: {meta.owner}</span>
-                      <span className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-1 text-slate-400" /> Lat/Lon Centroid: {centroid}</span>
-                      <span className="flex items-center"><Sprout className="h-3.5 w-3.5 mr-1 text-[#2E7D32]" /> Crop: {farm.crop_type}</span>
+                      <span className="flex items-center"><User className="h-3.5 w-3.5 mr-1 text-slate-400" /> {t("Owner")}: {meta.owner}</span>
+                      <span className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-1 text-slate-400" /> {t("Lat/Lon Centroid")}: {centroid}</span>
+                      <span className="flex items-center"><Sprout className="h-3.5 w-3.5 mr-1 text-[#2E7D32]" /> {t("Crop")}: {farm.crop_type}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-2 shrink-0">
                     <Button onClick={() => handleOpenEdit(farm.id)} variant="outline" size="sm" className="h-8 text-xs">
-                      <Edit className="mr-1.5 h-3.5 w-3.5 text-slate-600" /> Edit Info
+                      <Edit className="mr-1.5 h-3.5 w-3.5 text-slate-600" /> {t("Edit Info")}
                     </Button>
                     <Button onClick={() => handleDeleteFarm(farm.id)} variant="ghost" size="sm" className="h-8 text-xs text-red-600 hover:bg-red-50">
                       <Trash2 className="h-4 w-4" />
@@ -342,42 +344,42 @@ export default function Farms() {
                   <div className="md:col-span-3 grid gap-4 sm:grid-cols-2 text-xs">
                     
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Growth Stage Status</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Growth Stage Status")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
-                        <Activity className="h-3.5 w-3.5 mr-1.5 text-[#2E7D32]" /> {meta.growthStage} Stage
+                        <Activity className="h-3.5 w-3.5 mr-1.5 text-[#2E7D32]" /> {meta.growthStage} {t("Stage")}
                       </p>
                     </div>
 
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Weather Classification</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Weather Classification")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
                         <CloudSun className="h-3.5 w-3.5 mr-1.5 text-[#2E7D32]" /> {meta.weatherZone}
                       </p>
                     </div>
 
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Satellite Tile Registry</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Satellite Tile Registry")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
                         <Layers className="h-3.5 w-3.5 mr-1.5 text-[#2E7D32]" /> {meta.satelliteCoverage}
                       </p>
                     </div>
 
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Field Area Size</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Field Area Size")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
-                        <LayoutGrid className="h-3.5 w-3.5 mr-1.5 text-slate-500" /> {farm.area_ha} Hectares
+                        <LayoutGrid className="h-3.5 w-3.5 mr-1.5 text-slate-500" /> {farm.area_ha} {t("Hectares")}
                       </p>
                     </div>
 
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Planting Date</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Planting Date")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
                         <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> {meta.plantingDate}
                       </p>
                     </div>
 
                     <div className="bg-[#F7F9F5]/40 border border-[#DCE3D6]/20 p-3.5 rounded-xl space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Est. Harvest Target</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Est. Harvest Target")}</span>
                       <p className="font-bold text-slate-800 flex items-center">
                         <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> {meta.harvestDate}
                       </p>

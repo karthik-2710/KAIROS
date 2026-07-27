@@ -104,3 +104,59 @@ def get_history():
         return jsonify({"success": True, "history": mapped_results}), 200
     finally:
         db.close()
+
+@ai_bp.route('/chat', methods=['POST'])
+@require_auth
+def chat_with_bot():
+    data = request.json
+    message = data.get('message', '')
+    language = data.get('language', 'en')
+    
+    if not message:
+        return jsonify({'success': False, 'error': 'No message provided'}), 400
+
+    api_key = os.environ.get('GEMINI_API_KEY')
+    if not api_key:
+        return jsonify({
+            'success': False, 
+            'error': 'Gemini API key is not configured. Please add GEMINI_API_KEY to your .env file.'
+        }), 500
+
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=api_key)
+        
+        # Configure model with agricultural context
+        model = genai.GenerativeModel('gemini-flash-latest')
+        
+        system_prompt = (
+            "You are the KAIROS Assistant, a helpful AI embedded in a smart agriculture web app called KAIROS. "
+            "You help farmers understand the app's features and answer general agricultural questions concisely and politely. "
+            "IMPORTANT: When you mention a specific feature or page, you MUST provide a markdown link pointing directly to it. "
+            "Use the exact markdown format [Text](url) and ONLY use these paths: "
+            "Dashboard: [Dashboard](/app) | "
+            "Farms Registry: [Farms](/app/farms) | "
+            "IoT Sensors: [IoT Monitoring](/app/iot) | "
+            "Satellite/NDVI: [Satellite Analysis](/app/satellite) | "
+            "Leaf Scanning/Disease: [Leaf Inference](/app/leaf-scan) | "
+            "Recommendations: [Recommendations](/app/recommendations) | "
+            "History: [History](/app/history) | "
+            "Settings: [Settings](/app/settings). "
+            "Always output standard text with inline markdown links. "
+        )
+        
+        if language == 'ta':
+            system_prompt += "CRITICAL INSTRUCTION: The user prefers Tamil. You MUST reply entirely in fluent, natural Tamil language."
+        else:
+            system_prompt += "The user prefers English. Reply in English."
+        
+        # Simple generation call
+        response = model.generate_content(f"System Context: {system_prompt}\n\nUser: {message}")
+        
+        return jsonify({'success': True, 'response': response.text}), 200
+
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print("Error in Gemini API:", tb)
+        return jsonify({'success': False, 'error': 'AI processing failed', 'details': str(e)}), 500

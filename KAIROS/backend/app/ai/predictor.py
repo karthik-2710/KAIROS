@@ -1,14 +1,14 @@
 import io
-import numpy as np
+import torch
 from PIL import Image
 from app.ai.model_loader import load_model
 from app.knowledge_base.diseases import get_disease_info
 
 def predict_disease(image_bytes: bytes) -> dict:
     """
-    Run disease prediction on image bytes using the real EfficientNet-B3 model.
+    Run disease prediction on image bytes using the new PyTorch model.
     """
-    model, class_names, input_shape = load_model()
+    model, class_names, transform = load_model()
 
     if model is None:
         raise RuntimeError("AI model not loaded")
@@ -21,30 +21,27 @@ def predict_disease(image_bytes: bytes) -> dict:
         img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
         print("[Predictor] Image validated and converted to RGB.")
         
-        # 3. Resize to dynamic model input size
-        if input_shape and len(input_shape) >= 3:
-            target_size = (input_shape[1], input_shape[2])
-        else:
-            target_size = (300, 300)
-            
-        img = img.resize(target_size)
-        print(f"[Predictor] Image resized to {target_size}.")
+        # 3. Apply PyTorch transforms (Resize, ToTensor, Normalize)
+        img_tensor = transform(img)
+        print("[Predictor] Image transformed to tensor.")
         
-        # 4. Convert to float32
-        img_array = np.array(img, dtype=np.float32)
-        print("[Predictor] Image converted to float32 NumPy array.")
-        
-        # 5. Expand dimensions
-        img_array = np.expand_dims(img_array, axis=0)
-        print(f"[Predictor] Image expanded to batch dimension: {img_array.shape}.")
+        # 4. Expand dimensions for batch size of 1
+        img_tensor = img_tensor.unsqueeze(0)
+        print(f"[Predictor] Image expanded to batch dimension: {img_tensor.shape}.")
 
-        # 6. Pass into model.predict()
+        # 5. Pass into model
         print("[Predictor] Running prediction...")
-        raw_predictions = model.predict(img_array, verbose=0)
-        predictions = raw_predictions[0]
+        with torch.no_grad():
+            raw_predictions = model(img_tensor)
+            
+            # Apply softmax to get probabilities
+            probabilities = torch.nn.functional.softmax(raw_predictions[0], dim=0)
+            
+        # Move probabilities to CPU and convert to list/numpy
+        predictions = probabilities.cpu().numpy()
         
         # Calculate top 1 prediction
-        class_idx = int(np.argmax(predictions))
+        class_idx = int(torch.argmax(probabilities).item())
         
         if not class_names or class_idx >= len(class_names):
             raise RuntimeError(f"Class index {class_idx} is out of bounds for class names mapping.")
@@ -54,13 +51,13 @@ def predict_disease(image_bytes: bytes) -> dict:
         confidence_pct = round(confidence_score * 100, 2)
         
         print(f"[Predictor] Prediction complete.")
-        print(f"  -> Raw Prediction Shape: {raw_predictions.shape}")
         print(f"  -> Highest Probability: {confidence_score:.4f}")
         print(f"  -> Predicted Class Index: {class_idx}")
         print(f"  -> Mapped Disease Name: {raw_label}")
         print(f"  -> Confidence: {confidence_pct}%")
         
         # Calculate top 3 predictions
+        import numpy as np
         top_3_indices = np.argsort(predictions)[-3:][::-1]
         top_3 = []
         for idx in top_3_indices:
@@ -94,9 +91,8 @@ def predict_disease(image_bytes: bytes) -> dict:
             "crop": crop,
             "status": status,
             "top_3": top_3,
-            "recommendations": disease_info,  # Passed directly to routes/ai.py
+            "recommendations": disease_info,
             "description": f"AI model classified the image as {condition} with {confidence_pct}% confidence.",
-            # Fields for database inserts in routes/ai.py:
             "severity": severity,
             "healthy": is_healthy,
             "scientific_name": disease_info.get('Scientific_Name', 'N/A')

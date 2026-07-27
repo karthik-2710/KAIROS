@@ -33,8 +33,10 @@ import {
 } from 'lucide-react'
 import { FarmMap } from '@/components/ui/FarmMap'
 import { getHealthStatus } from '@/utils/health'
+import { useTranslation } from 'react-i18next'
 
 export default function Dashboard() {
+  const { t } = useTranslation()
   const { selectedFarmId, farms } = useOutletContext<FarmContextType>()
   const farmId = selectedFarmId || farms[0]?.id || 1
   const [isSyncing, setIsSyncing] = React.useState(false)
@@ -154,18 +156,18 @@ export default function Dashboard() {
       <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-y-0">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-slate-900">
-            {currentFarm?.name} Analytics
+            {currentFarm?.name} {t("Analytics")}
           </h1>
           <p className="text-xs text-slate-500">
-            Registered crop: <strong className="text-slate-800">{currentFarm?.crop_type}</strong> • Area: {currentFarm?.area_ha} ha
+            {t("Registered crop")}: <strong className="text-slate-800">{currentFarm?.crop_type}</strong> • {t("Area")}: {currentFarm?.area_ha} ha
           </p>
         </div>
         <div className="flex items-center space-x-2.5">
           <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-            Last Telemetry check: {sensor.timestamp ? new Date(sensor.timestamp).toLocaleTimeString() : 'offline'}
+            {t("Last Telemetry check")}: {sensor.timestamp ? new Date(sensor.timestamp).toLocaleTimeString() : t('offline')}
           </span>
           <Button onClick={handleSync} variant="outline" size="sm" disabled={isSyncing}>
-            {isSyncing ? "Syncing..." : "Sync Assets"}
+            {isSyncing ? t("Syncing...") : t("Sync Assets")}
           </Button>
         </div>
       </div>
@@ -184,20 +186,20 @@ export default function Dashboard() {
           <div className="p-6 flex flex-col justify-center space-y-4 bg-white border-l border-[#DCE3D6]/50">
             <div>
               <h3 className="text-lg font-bold text-slate-900 flex items-center">
-                <Satellite className="h-4 w-4 mr-2 text-slate-500" /> Sentinel-2 Analysis
+                <Satellite className="h-4 w-4 mr-2 text-slate-500" /> {t("Sentinel-2 Analysis")}
               </h3>
-              <p className="text-xs text-slate-500 mt-1">Latest cloud-free statistical extraction</p>
+              <p className="text-xs text-slate-500 mt-1">{t("Latest cloud-free statistical extraction")}</p>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mean NDVI</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Mean NDVI")}</span>
                 <div className="flex items-baseline space-x-2 mt-1">
                   <span className="text-2xl font-black text-slate-900">{satellite.ndvi_mean !== undefined ? satellite.ndvi_mean : 'N/A'}</span>
                 </div>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Health</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Health")}</span>
                 <div className="mt-1">
                   <Badge style={{
                     backgroundColor: getHealthStatus(satellite.ndvi_mean).bg,
@@ -211,7 +213,7 @@ export default function Dashboard() {
             
             <div className="pt-3 border-t border-[#EDF1EA]/70 flex justify-between items-center text-xs text-slate-600">
                <div className="flex items-center"><CalendarIcon className="h-3.5 w-3.5 mr-1 text-slate-400"/> {satellite.timestamp ? new Date(satellite.timestamp).toLocaleDateString() : 'N/A'}</div>
-               <div className="flex items-center"><CloudIcon className="h-3.5 w-3.5 mr-1 text-slate-400"/> {satellite.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'} Clouds</div>
+               <div className="flex items-center"><CloudIcon className="h-3.5 w-3.5 mr-1 text-slate-400"/> {satellite.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'} {t("Clouds")}</div>
             </div>
           </div>
         </div>
@@ -223,16 +225,16 @@ export default function Dashboard() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">Farm Health Score</span>
+              <span className="text-xs font-semibold text-slate-500">{t("Farm Health Score")}</span>
               <Activity className={`h-4 w-4 ${healthScore >= 75 ? 'text-green-600' : healthScore >= 60 ? 'text-amber-500' : 'text-red-500'}`} />
             </div>
             <div className="mt-2.5 flex items-baseline space-x-2">
               <span className="text-2xl font-bold text-slate-900">{healthScore}%</span>
               <Badge variant={healthScore >= 75 ? 'success' : healthScore >= 60 ? 'warning' : 'destructive'}>
-                {healthScore >= 75 ? 'Optimal' : healthScore >= 60 ? 'Unstable' : 'Critical'}
+                {healthScore >= 75 ? t('Optimal') : healthScore >= 60 ? t('Unstable') : t('Critical')}
               </Badge>
             </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">Composite index of sat + IoT feeds</p>
+            <p className="mt-1.5 text-[10px] text-slate-400">{t("Composite index of sat + IoT feeds")}</p>
           </CardContent>
         </Card>
 
@@ -240,16 +242,16 @@ export default function Dashboard() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">Soil Moisture</span>
+              <span className="text-xs font-semibold text-slate-500">{t("Soil Moisture")}</span>
               <Droplets className="h-4 w-4 text-blue-500" />
             </div>
             <div className="mt-2.5 flex items-baseline space-x-2">
               <span className="text-2xl font-bold text-slate-900">{sensor.soil_moisture !== undefined ? `${sensor.soil_moisture}%` : 'N/A'}</span>
               <span className="text-[10px] text-slate-500 flex items-center">
-                <TrendingUp className="h-3 w-3 text-green-500 mr-0.5" /> Target 45%+
+                <TrendingUp className="h-3 w-3 text-green-500 mr-0.5" /> {t("Target 45%+")}
               </span>
             </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">IoT sensor reading at 15cm depth</p>
+            <p className="mt-1.5 text-[10px] text-slate-400">{t("IoT sensor reading at 15cm depth")}</p>
           </CardContent>
         </Card>
 
@@ -259,16 +261,16 @@ export default function Dashboard() {
         <Card className="hover:border-[#DCE3D6] transition-all">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">Critical Warnings</span>
+              <span className="text-xs font-semibold text-slate-500">{t("Critical Warnings")}</span>
               <AlertTriangle className={`h-4 w-4 ${stats.alerts > 0 ? 'text-red-500 animate-bounce' : 'text-slate-400'}`} />
             </div>
             <div className="mt-2.5 flex items-baseline space-x-2">
               <span className="text-2xl font-bold text-slate-900">{stats.alerts}</span>
               <Badge variant={stats.alerts > 0 ? 'destructive' : 'secondary'}>
-                {stats.alerts > 0 ? 'Needs Attention' : 'Cleared'}
+                {stats.alerts > 0 ? t('Needs Attention') : t('Cleared')}
               </Badge>
             </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">Active recommendations matching issues</p>
+            <p className="mt-1.5 text-[10px] text-slate-400">{t("Active recommendations matching issues")}</p>
           </CardContent>
         </Card>
       </div>
@@ -278,8 +280,8 @@ export default function Dashboard() {
         {/* Soil moisture chart */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Soil Moisture & Temperature Index</CardTitle>
-            <CardDescription>Visualizing continuous real-time readings from telemetry sensor nodes.</CardDescription>
+            <CardTitle>{t("Soil Moisture & Temperature Index")}</CardTitle>
+            <CardDescription>{t("Visualizing continuous real-time readings from telemetry sensor nodes.")}</CardDescription>
           </CardHeader>
           <CardContent className="h-72">
             {chartData.length > 0 ? (
@@ -305,7 +307,7 @@ export default function Dashboard() {
               </ResponsiveContainer>
             ) : (
               <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                No telemetry logs registered for this parcel.
+                {t("No telemetry logs registered for this parcel.")}
               </div>
             )}
           </CardContent>
@@ -314,8 +316,8 @@ export default function Dashboard() {
         {/* Live Weather Widget */}
         <Card className="flex flex-col justify-between">
           <CardHeader className="pb-2">
-            <CardTitle>Canopy Weather</CardTitle>
-            <CardDescription>Live station metrics & forecast.</CardDescription>
+            <CardTitle>{t("Canopy Weather")}</CardTitle>
+            <CardDescription>{t("Live station metrics & forecast.")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 flex-1 flex flex-col justify-center">
             {weather.temperature !== undefined ? (
@@ -328,7 +330,7 @@ export default function Dashboard() {
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-slate-900">{weather.temperature}°C</h3>
-                      <p className="text-[10px] text-slate-500">Feels like {weather.feels_like}°C • {weather.description}</p>
+                      <p className="text-[10px] text-slate-500">{t("Feels like")} {weather.feels_like}°C • {weather.description}</p>
                     </div>
                   </div>
                 </div>
@@ -336,19 +338,19 @@ export default function Dashboard() {
                 {/* Weather items */}
                 <div className="grid grid-cols-4 gap-2 border-t border-b border-[#EDF1EA]/70 py-4">
                   <div className="text-center">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Humidity</span>
+                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Humidity")}</span>
                     <p className="mt-1 text-xs font-bold text-slate-800">{weather.humidity}%</p>
                   </div>
                   <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Wind</span>
+                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Wind")}</span>
                     <p className="mt-1 text-xs font-bold text-slate-800">{weather.wind_speed} km/h</p>
                   </div>
                   <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Pressure</span>
+                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Pressure")}</span>
                     <p className="mt-1 text-xs font-bold text-slate-800">{weather.pressure}</p>
                   </div>
                   <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">Rain</span>
+                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Rain")}</span>
                     <p className="mt-1 text-xs font-bold text-slate-800">{weather.rain_forecast_mm} mm</p>
                   </div>
                 </div>
@@ -356,12 +358,12 @@ export default function Dashboard() {
                 {/* Bottom Info Location */}
                 <div className="flex items-center space-x-2 text-[10px] text-slate-500">
                   <CloudRain className="h-4.5 w-4.5 text-blue-500" />
-                  <span>Station: {weather.location}</span>
+                  <span>{t("Station")}: {weather.location}</span>
                 </div>
               </>
             ) : (
               <div className="flex h-full w-full items-center justify-center text-xs text-slate-400 text-center">
-                Weather service not configured.<br />Please provide a valid API key.
+                {t("Weather service not configured.")}<br />{t("Please provide a valid API key.")}
               </div>
             )}
           </CardContent>
@@ -375,11 +377,11 @@ export default function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Agronomic Recommendations</CardTitle>
-                <CardDescription>Cross-verified guidelines from AI models & IoT telemetry feeds.</CardDescription>
+                <CardTitle>{t("Agronomic Recommendations")}</CardTitle>
+                <CardDescription>{t("Cross-verified guidelines from AI models & IoT telemetry feeds.")}</CardDescription>
               </div>
               <Badge variant={recommendation.severity === 'High' ? 'destructive' : recommendation.severity === 'Moderate' ? 'warning' : 'success'}>
-                {recommendation.severity === 'None' ? 'Healthy' : `${recommendation.severity} Threat`}
+                {recommendation.severity === 'None' ? t('Healthy') : `${recommendation.severity} ${t('Threat')}`}
               </Badge>
             </div>
           </CardHeader>
@@ -398,7 +400,7 @@ export default function Dashboard() {
 
             {/* Suggested actions list */}
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">Suggested Action Item</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">{t("Suggested Action Item")}</span>
               <p className="mt-1.5 text-xs text-slate-700 bg-white border border-[#DCE3D6]/70 p-3 rounded-lg leading-relaxed shadow-sm">
                 {recommendation.action}
               </p>
@@ -409,8 +411,8 @@ export default function Dashboard() {
         {/* NDVI Zone analysis circular stats */}
         <Card className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>NDVI Vegetation Zones</CardTitle>
-            <CardDescription>Crop leaf growth zones based on Sentinel-2 bands.</CardDescription>
+            <CardTitle>{t("NDVI Vegetation Zones")}</CardTitle>
+            <CardDescription>{t("Crop leaf growth zones based on Sentinel-2 bands.")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center flex-1 pb-6 space-y-4">
             {/* Pie Chart container */}
@@ -433,7 +435,7 @@ export default function Dashboard() {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute text-center">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Mean NDVI</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">{t("Mean NDVI")}</span>
                 <p className="text-xl font-extrabold text-slate-900">{satellite.ndvi_mean}</p>
               </div>
             </div>
@@ -442,17 +444,17 @@ export default function Dashboard() {
             <div className="w-full grid grid-cols-3 gap-2 text-center text-xs border-t border-[#EDF1EA]/70 pt-4">
               <div>
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#2E7D32] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">Healthy</span>
+                <span className="text-slate-500 text-[10px]">{t("Healthy")}</span>
                 <p className="font-bold text-slate-900 mt-0.5">{satellite.healthy_pct}%</p>
               </div>
               <div className="border-l border-r border-[#EDF1EA]/70">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#FFB300] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">Moderate</span>
+                <span className="text-slate-500 text-[10px]">{t("Moderate")}</span>
                 <p className="font-bold text-slate-900 mt-0.5">{satellite.moderate_pct}%</p>
               </div>
               <div>
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">Stress</span>
+                <span className="text-slate-500 text-[10px]">{t("Stress")}</span>
                 <p className="font-bold text-slate-900 mt-0.5">{satellite.stress_pct}%</p>
               </div>
             </div>

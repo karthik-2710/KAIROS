@@ -3,6 +3,7 @@ import { Menu, Bell, Sprout, ChevronDown, LogOut, User } from 'lucide-react'
 import { Farm } from '@/types'
 import { authAPI } from '@/services/api'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 interface NavbarProps {
   farms: Farm[]
@@ -16,6 +17,7 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
   const [profileOpen, setProfileOpen] = React.useState(false)
   const [notificationsOpen, setNotificationsOpen] = React.useState(false)
+  const { t, i18n } = useTranslation()
   
   const dropdownRef = React.useRef<HTMLDivElement>(null)
   const profileRef = React.useRef<HTMLDivElement>(null)
@@ -43,6 +45,12 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
   const handleLogout = () => {
     authAPI.logout()
     navigate('/login')
+  }
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'ta' : 'en'
+    i18n.changeLanguage(newLang)
+    localStorage.setItem('kairos_language', newLang)
   }
 
   // Generate warning/alerts based on farm scores
@@ -74,7 +82,7 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
             {dropdownOpen && (
               <div className="absolute left-0 mt-1.5 w-56 rounded-xl border border-[#DCE3D6] bg-white p-1 shadow-lg ring-1 ring-black/5 animate-fade-in">
                 <div className="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Select Active Farm
+                  {t("Select Active Farm")}
                 </div>
                 {farms.map((farm) => (
                   <button
@@ -106,6 +114,14 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
 
       {/* Notifications & Profile */}
       <div className="flex items-center space-x-3">
+        {/* Language Toggle */}
+        <button
+          onClick={toggleLanguage}
+          className="flex items-center justify-center h-7 w-12 rounded-full border border-[#DCE3D6] bg-white text-xs font-bold text-[#2E7D32] hover:bg-[#EDF1EA]/50 transition shadow-sm"
+        >
+          {i18n.language === 'ta' ? 'தமிழ்' : 'EN'}
+        </button>
+
         {/* Notifications */}
         <div className="relative" ref={notificationsRef}>
           <button
@@ -121,8 +137,8 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
           {notificationsOpen && (
             <div className="absolute right-0 mt-2 w-80 origin-top-right rounded-xl border border-[#DCE3D6] bg-white p-1.5 shadow-lg ring-1 ring-black/5 animate-fade-in">
               <div className="px-3 py-2 border-b border-[#EDF1EA]/50 text-xs font-bold text-slate-900 flex justify-between">
-                <span>Alerts & Notifications</span>
-                <span className="text-[10px] text-[#2E7D32]">{stressedFarms.length} Active</span>
+                <span>{t("Alerts & Notifications")}</span>
+                <span className="text-[10px] text-[#2E7D32]">{stressedFarms.length} {t("Active")}</span>
               </div>
               <div className="max-h-60 overflow-y-auto py-1">
                 {stressedFarms.length > 0 ? (
@@ -165,14 +181,14 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
                   className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-600 hover:bg-[#EDF1EA]/50 hover:text-slate-900"
                 >
                   <User className="h-4 w-4" />
-                  <span>My Profile</span>
+                  <span>{t("My Profile")}</span>
                 </button>
                 <button
                   onClick={handleLogout}
                   className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>Log Out</span>
+                  <span>{t("Log Out")}</span>
                 </button>
               </div>
             </div>

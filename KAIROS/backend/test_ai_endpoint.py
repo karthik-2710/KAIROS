@@ -25,9 +25,9 @@ with app.app_context():
         'farm_id': '1'
     }
     
-    print("Sending POST request to /ai/analyze-leaf...")
+    print("Sending POST request to /api/ai/analyze-leaf...")
     response = client.post(
-        '/ai/analyze-leaf',
+        '/api/ai/analyze-leaf',
         data=data,
         content_type='multipart/form-data',
         headers={'Authorization': f'Bearer {token}'}

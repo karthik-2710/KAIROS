@@ -5,7 +5,10 @@ Werkzeug
 requests
 numpy
 Pillow
-tensorflow
+torch
+torchvision
+torchaudio
 sentinelhub
 PyJWT
 bcrypt
+google-generativeai

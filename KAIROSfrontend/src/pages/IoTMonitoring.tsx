@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   Lock
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 // Define the sensor card schema
 interface SensorCard {
@@ -35,6 +36,7 @@ interface SensorCard {
 }
 
 export default function IoTMonitoring() {
+  const { t } = useTranslation()
   const { selectedFarmId, farms } = useOutletContext<FarmContextType>()
   const currentFarm = farms.find(f => f.id === selectedFarmId) || farms[0]
 
@@ -162,15 +164,15 @@ export default function IoTMonitoring() {
       {/* Page Header */}
       <div className="flex flex-col justify-between space-y-3 sm:flex-row sm:items-center sm:space-y-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">IoT Telemetry Grid</h1>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">{t("IoT Telemetry Grid")}</h1>
           <p className="text-xs text-slate-500">
-            Live telemetry feed from node grids registered at {currentFarm?.name}.
+            {t("Live telemetry feed from node grids registered at")} {currentFarm?.name}.
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            Telemetry Feed Active
+            {t("Telemetry Feed Active")}
           </span>
         </div>
       </div>
@@ -227,8 +229,8 @@ export default function IoTMonitoring() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader className="pb-3 border-b border-[#EDF1EA]/50">
-              <CardTitle>Hardware Node Spatial Map</CardTitle>
-              <CardDescription>Geometric coordinates layout mapping registered nodes across the coordinates perimeter.</CardDescription>
+              <CardTitle>{t("Hardware Node Spatial Map")}</CardTitle>
+              <CardDescription>{t("Geometric coordinates layout mapping registered nodes across the coordinates perimeter.")}</CardDescription>
             </CardHeader>
             <CardContent className="pt-6 grid gap-6 md:grid-cols-5 items-center">
               

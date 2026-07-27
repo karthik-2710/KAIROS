@@ -1,87 +1,97 @@
 import os
-import numpy as np
 from pathlib import Path
+import torch
+import torchvision.models as models
+from torchvision import transforms
 from config import Config
 
 _model = None
 _class_names = None
-_input_shape = None
+_transform = None
 
 def load_model():
-    """Load the trained model, class names, and input shape (singleton pattern)."""
-    global _model, _class_names, _input_shape
+    """Load the trained PyTorch model, class names, and input transforms (singleton pattern)."""
+    global _model, _class_names, _transform
 
     if _model is not None:
-        return _model, _class_names, _input_shape
+        return _model, _class_names, _transform
 
-    model_path = Path(Config.MODEL_PATH) if hasattr(Config, 'MODEL_PATH') else Path('models/best_model.keras')
+    # Look for grape_v1.pt first, then fallback to Config if available
+    default_model_path = Path('models/grape_v1.pt')
     
-    try:
-        import tensorflow as tf
+    if hasattr(Config, 'MODEL_PATH'):
+        model_path = Path(Config.MODEL_PATH)
+        if not model_path.exists():
+            model_path = default_model_path
+    else:
+        model_path = default_model_path
         
-        _class_names = _default_plant_village_classes()
+    try:
+        _class_names = _new_disease_classes()
         
         print("\n====================================")
         print("KAIROS AI")
         print("====================================")
-        print("Loading AI model...\n")
+        print("Loading AI model (PyTorch)...\n")
         
         if model_path.exists():
             abs_path = model_path.absolute()
             print(f"Model found at: {abs_path}")
             print("Loading...")
-            _model = tf.keras.models.load_model(str(model_path))
+            
+            # Instantiate architecture
+            _model = models.efficientnet_v2_s(num_classes=len(_class_names))
+            
+            # Load state dict
+            checkpoint = torch.load(abs_path, map_location='cpu')
+            if 'model_state_dict' in checkpoint:
+                _model.load_state_dict(checkpoint['model_state_dict'])
+            else:
+                _model.load_state_dict(checkpoint)
+                
+            _model.eval() # Set to evaluation mode
+            
             print("Model loaded successfully.\n")
             
-            _input_shape = _model.input_shape
-            output_shape = _model.output_shape
-            class_count = output_shape[-1]
-            
-            if _input_shape and len(_input_shape) >= 3:
-                expected_size = (_input_shape[1], _input_shape[2])
-            else:
-                expected_size = "Unknown"
+            # Define transforms (Standard ImageNet/EfficientNet transforms)
+            _transform = transforms.Compose([
+                transforms.Resize((384, 384)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], 
+                                     std=[0.229, 0.224, 0.225])
+            ])
             
             print("====================================")
             print("Model Inspection:")
-            print(f"Input Shape: {_input_shape}")
-            print(f"Output Shape: {output_shape}")
-            print(f"Class Count: {class_count}")
-            print(f"Expected image size: {expected_size}")
+            print(f"Architecture: EfficientNet-V2-S")
+            print(f"Expected image size: 384x384")
             print("====================================\n")
             
             print(f"Classes: {len(_class_names)}\n")
             print("Backend Ready\n")
             print("====================================\n")
         else:
-            raise RuntimeError(f"TensorFlow model not found at {model_path}")
+            raise RuntimeError(f"PyTorch model not found at {model_path}")
             
-        return _model, _class_names, _input_shape
+        return _model, _class_names, _transform
 
     except ImportError:
-        print("[AI Model] TensorFlow not installed.")
+        print("[AI Model] PyTorch not installed.")
         return None, None, None
     except Exception as e:
+        import traceback
         print(f"[AI Model] Error loading model: {e}")
+        traceback.print_exc()
         return None, None, None
 
 
-def _default_plant_village_classes():
-    """Exactly the 15 classes from the newly trained EfficientNet-B3."""
+def _new_disease_classes():
+    """The 22 classes from the new PyTorch model."""
     return [
-        "Pepper__bell___Bacterial_spot",
-        "Pepper__bell___healthy",
-        "Potato___Early_blight",
-        "Potato___healthy",
-        "Potato___Late_blight",
-        "Tomato_Bacterial_spot",
-        "Tomato_Early_blight",
-        "Tomato_healthy",
-        "Tomato_Late_blight",
-        "Tomato_Leaf_Mold",
-        "Tomato_Septoria_leaf_spot",
-        "Tomato_Spider_mites_Two_spotted_spider_mite",
-        "Tomato__Target_Spot",
-        "Tomato__Tomato_mosaic_virus",
-        "Tomato__Tomato_YellowLeaf__Curl_Virus"
+        'Cashew_anthracnose', 'Cashew_gumosis', 'Cashew_healthy', 'Cashew_leaf miner', 
+        'Cashew_red rust', 'Cassava_bacterial blight', 'Cassava_brown spot', 
+        'Cassava_green mite', 'Cassava_healthy', 'Cassava_mosaic', 'Maize_fall armyworm', 
+        'Maize_grasshoper', 'Maize_healthy', 'Maize_leaf beetle', 'Maize_leaf blight', 
+        'Maize_leaf spot', 'Maize_streak virus', 'Tomato_healthy', 'Tomato_leaf blight', 
+        'Tomato_leaf curl', 'Tomato_septoria leaf spot', 'Tomato_verticulium wilt'
     ]

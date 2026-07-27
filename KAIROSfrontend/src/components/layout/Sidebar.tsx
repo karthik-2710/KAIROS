@@ -18,16 +18,19 @@ interface SidebarProps {
   onClose: () => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { t } = useTranslation()
   const navItems = [
-    { name: "Dashboard", to: "/app", icon: LayoutDashboard },
-    { name: "My Farms", to: "/app/farms", icon: Sprout },
-    { name: "IoT Sensor Grid", to: "/app/iot", icon: Radio },
-    { name: "Satellite NDVI", to: "/app/satellite", icon: Satellite },
-    { name: "AI Leaf Scan", to: "/app/leaf-scan", icon: Camera },
-    { name: "Recommendations", to: "/app/recommendations", icon: Brain },
-    { name: "Analysis History", to: "/app/history", icon: History },
-    { name: "System Settings", to: "/app/settings", icon: Settings },
+    { name: t("Dashboard"), to: "/app", icon: LayoutDashboard },
+    { name: t("My Farms"), to: "/app/farms", icon: Sprout },
+    { name: t("IoT Sensor Grid"), to: "/app/iot", icon: Radio },
+    { name: t("Satellite NDVI"), to: "/app/satellite", icon: Satellite },
+    { name: t("AI Leaf Scan"), to: "/app/leaf-scan", icon: Camera },
+    { name: t("Recommendations"), to: "/app/recommendations", icon: Brain },
+    { name: t("Analysis History"), to: "/app/history", icon: History },
+    { name: t("System Settings"), to: "/app/settings", icon: Settings },
   ]
 
   return (
@@ -57,7 +60,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </div>
                 <div>
                   <span className="text-lg font-bold tracking-tight text-slate-950">KAIROS</span>
-                  <p className="text-[9px] font-semibold text-[#2E7D32] uppercase tracking-wider -mt-1">Precision Ag</p>
+                  <p className="text-[9px] font-semibold text-[#2E7D32] uppercase tracking-wider -mt-1">{t("Precision Ag")}</p>
                 </div>
               </div>
               <button 

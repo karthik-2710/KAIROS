@@ -8,6 +8,7 @@ import { Loader2, Plus, Sprout } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { Card, CardContent } from '../ui/Card'
 import { Farm } from '@/types'
+import { Chatbot } from '../chat/Chatbot'
 
 // Outlet Context Type
 export interface FarmContextType {
@@ -142,6 +143,7 @@ export function Layout() {
           </div>
         </main>
       </div>
+      <Chatbot />
     </div>
   )
 }

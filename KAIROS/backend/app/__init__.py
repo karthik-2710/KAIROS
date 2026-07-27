@@ -40,15 +40,15 @@ def create_app():
     # Robust Startup Diagnostics for AI Model
     print("[Startup] Initializing AI Model diagnostics...")
     try:
-        import tensorflow as tf
-        print(f"TensorFlow {tf.__version__} loaded successfully\n")
+        import torch
+        print(f"PyTorch {torch.__version__} loaded successfully\n")
         
         from app.ai.model_loader import load_model
-        model, class_names, input_shape = load_model()
+        model, class_names, transform = load_model()
         if model is not None:
-            print("[Startup] AI Model loaded successfully during app initialization.")
+            print("[Startup] PyTorch AI Model loaded successfully during app initialization.")
         else:
-            print("[Startup] WARNING: AI Model failed to load or is unavailable.")
+            print("[Startup] WARNING: PyTorch AI Model failed to load or is unavailable.")
     except Exception as e:
         import traceback
         print(f"[Startup] ERROR: Exception during AI Model initialization: {e}")

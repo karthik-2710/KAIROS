@@ -19,8 +19,10 @@ import {
 import { dashboardAPI, satelliteAPI } from '@/services/api'
 import { FarmMap } from '@/components/ui/FarmMap'
 import { getHealthStatus } from '@/utils/health'
+import { useTranslation } from 'react-i18next'
 
 export default function SatelliteAnalysis() {
+  const { t } = useTranslation()
   const { selectedFarmId, farms } = useOutletContext<FarmContextType>()
   const farmId = selectedFarmId || farms[0]?.id || 1
   const currentFarm = farms.find(f => f.id === farmId) || farms[0]
@@ -64,9 +66,9 @@ export default function SatelliteAnalysis() {
       {/* Page Header */}
       <div className="flex flex-col justify-between space-y-3 sm:flex-row sm:items-center sm:space-y-0 border-b border-[#1e2e22]/50 pb-4">
         <div>
-          <span className="text-[9px] font-bold text-[#2E7D32] uppercase tracking-wider">GIS Radiometric Panel</span>
+          <span className="text-[9px] font-bold text-[#2E7D32] uppercase tracking-wider">{t("GIS Radiometric Panel")}</span>
           <h1 className="text-xl font-bold tracking-tight text-white mt-1 flex items-center">
-            <Satellite className="h-5 w-5 mr-2 text-[#2E7D32]" /> Satellite Imagery Analytics
+            <Satellite className="h-5 w-5 mr-2 text-[#2E7D32]" /> {t("Satellite Imagery Analytics")}
           </h1>
         </div>
         <div className="flex items-center space-x-2">
@@ -76,7 +78,7 @@ export default function SatelliteAnalysis() {
             className="flex items-center text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#2E7D32] bg-[#2E7D32]/10 text-white hover:bg-[#2E7D32]/20 transition disabled:opacity-50"
           >
             <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-            {isRefreshing ? 'Syncing...' : 'Refresh Analysis'}
+            {isRefreshing ? t("Syncing...") : t("Refresh Analysis")}
           </button>
         </div>
       </div>
@@ -135,7 +137,7 @@ export default function SatelliteAnalysis() {
           <Card className="border-[#1e2e22] bg-[#0A0E0C] h-full">
             <CardHeader className="pb-3 border-b border-[#1e2e22]/50">
               <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                Satellite Specs & Metadata
+                {t("Satellite Specs & Metadata")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-4 space-y-4 text-xs">

@@ -274,3 +274,20 @@ export const recommendationAPI = {
     }
   }
 }
+
+export const chatAPI = {
+  sendMessage: async (message: string, language: string = 'en'): Promise<string> => {
+    try {
+      const res = await client.post('/api/ai/chat', { message, language })
+      if (res.data && res.data.success) {
+        return res.data.response
+      }
+      return "Sorry, I received an unexpected response from the server."
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.error) {
+        throw new Error(error.response.data.error)
+      }
+      throw new Error("Failed to connect to AI server.")
+    }
+  }
+}
