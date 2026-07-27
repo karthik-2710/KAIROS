@@ -90,7 +90,7 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9F5] text-slate-800 antialiased overflow-hidden selection:bg-green-100 selection:text-green-950 font-sans">
+    <div className="min-h-screen bg-background dark:bg-dark-bg text-slate-800 dark:text-slate-200 antialiased overflow-hidden selection:bg-green-100 selection:text-green-950 font-sans">
       
       {/* ─── FLOAT BACKGROUND GLOWS ──────────────────────────────────────────────── */}
       <div className="absolute top-[-20%] left-[-10%] h-[600px] w-[600px] rounded-full bg-green-100/30 blur-[120px] pointer-events-none" />
@@ -98,14 +98,14 @@ export default function Landing() {
       <div className="absolute bottom-[-10%] left-[20%] h-[600px] w-[600px] rounded-full bg-emerald-100/20 blur-[120px] pointer-events-none" />
 
       {/* ─── PUBLIC HEADER ───────────────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 border-b border-[#DCE3D6]/50 bg-[#F7F9F5]/70 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 border-b border-slate-200 dark:border-white/10/50 bg-background dark:bg-dark-bg/70 backdrop-blur-md px-6 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] text-white shadow-md">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-900 text-white shadow-md">
             <Compass className="h-5 w-5" />
           </div>
           <div>
             <span className="text-sm font-extrabold tracking-tight text-slate-950">KAIROS</span>
-            <span className="block text-[8px] font-bold text-[#2E7D32] uppercase tracking-wider -mt-1">Precision Ag</span>
+            <span className="block text-[8px] font-bold text-primary dark:text-primary-300 uppercase tracking-wider -mt-1">Precision Ag</span>
           </div>
         </div>
         
@@ -133,11 +133,11 @@ export default function Landing() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="inline-flex items-center space-x-2 bg-white border border-[#DCE3D6]/80 px-3 py-1 rounded-full text-[10px] font-semibold text-slate-700 shadow-sm"
+          className="inline-flex items-center space-x-2 bg-white dark:bg-dark-surface border border-slate-200 dark:border-white/10/80 px-3 py-1 rounded-full text-[10px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm"
         >
           <Badge variant="accent" className="text-[8px] py-0 px-1.5 uppercase font-extrabold tracking-wide">SIH 2026</Badge>
           <span>Precision Agriculture Decision Engine</span>
-          <ArrowRight className="h-3 w-3 text-[#2E7D32]" />
+          <ArrowRight className="h-3 w-3 text-primary dark:text-primary-300" />
         </motion.div>
 
         {/* Title & Subtitle */}
@@ -149,13 +149,13 @@ export default function Landing() {
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.08] max-w-3xl mx-auto"
           >
             AI-Powered <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] bg-clip-text text-transparent">Precision Agriculture</span>
+            <span className="bg-gradient-to-r from-primary to-primary-900 bg-clip-text text-transparent">Precision Agriculture</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto leading-relaxed"
+            className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed"
           >
             Increase crop yield using Artificial Intelligence, Sentinel-2 Satellite Analysis, IoT Telemetry, and Real-time Weather Intelligence.
           </motion.p>
@@ -173,29 +173,29 @@ export default function Landing() {
           </Button>
           <a href="#interactive-preview">
             <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold">
-              <Play className="mr-2 h-4 w-4 text-[#2E7D32] fill-current" /> Watch Live Demo
+              <Play className="mr-2 h-4 w-4 text-primary dark:text-primary-300 fill-current" /> Watch Live Demo
             </Button>
           </a>
         </motion.div>
       </section>
 
       {/* ─── VECTOR OUTLINE BACKGROUND DECORATION ──────────────────────────────────── */}
-      <section className="px-6 py-6 border-t border-[#DCE3D6]/40 bg-white/40">
+      <section className="px-6 py-6 border-t border-slate-200 dark:border-white/10/40 bg-white dark:bg-dark-surface/40">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="space-y-1">
-            <p className="text-3xl font-extrabold text-[#2E7D32]">+30%</p>
+            <p className="text-3xl font-extrabold text-primary dark:text-primary-300">+30%</p>
             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Crop Yield Index</p>
           </div>
-          <div className="space-y-1 border-l border-[#EDF1EA]">
-            <p className="text-3xl font-extrabold text-[#2E7D32]">-40%</p>
+          <div className="space-y-1 border-l border-slate-100 dark:border-white/5">
+            <p className="text-3xl font-extrabold text-primary dark:text-primary-300">-40%</p>
             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Water Irrigation Waste</p>
           </div>
-          <div className="space-y-1 border-l border-[#EDF1EA]">
-            <p className="text-3xl font-extrabold text-[#2E7D32]">10m</p>
+          <div className="space-y-1 border-l border-slate-100 dark:border-white/5">
+            <p className="text-3xl font-extrabold text-primary dark:text-primary-300">10m</p>
             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Sentinel-2 Resolution</p>
           </div>
-          <div className="space-y-1 border-l border-[#EDF1EA]">
-            <p className="text-3xl font-extrabold text-[#2E7D32]">0</p>
+          <div className="space-y-1 border-l border-slate-100 dark:border-white/5">
+            <p className="text-3xl font-extrabold text-primary dark:text-primary-300">0</p>
             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">False Alert Rate</p>
           </div>
         </div>
@@ -204,9 +204,9 @@ export default function Landing() {
       {/* ─── CORE TECHNOLOGY GRID ────────────────────────────────────────────────── */}
       <section className="px-6 py-20 max-w-7xl mx-auto space-y-12">
         <div className="text-center space-y-2 max-w-md mx-auto">
-          <Badge variant="secondary" className="px-2.5 py-0.5 text-[9px] uppercase font-extrabold tracking-wider text-[#2E7D32]">Agronomic Fusions</Badge>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Advanced Technological Layers</h2>
-          <p className="text-xs text-slate-500 leading-normal">
+          <Badge variant="secondary" className="px-2.5 py-0.5 text-[9px] uppercase font-extrabold tracking-wider text-primary dark:text-primary-300">Agronomic Fusions</Badge>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Advanced Technological Layers</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
             Five independent layers verifying environmental datasets to support agricultural yield.
           </p>
         </div>
@@ -215,11 +215,11 @@ export default function Landing() {
           {/* Card 1: AI Disease scanner */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-primary dark:text-primary-300 border border-slate-200 dark:border-white/10">
                 <Camera className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">AI Disease Classification</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">AI Disease Classification</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 MobileNetV3 convolutional neural networks trained on 38 distinct PlantVillage leaf datasets for instant diagnostic vector feedback.
               </p>
             </CardContent>
@@ -228,11 +228,11 @@ export default function Landing() {
           {/* Card 2: Satellite NDVI */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-primary dark:text-primary-300 border border-slate-200 dark:border-white/10">
                 <Satellite className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">Sentinel-2 NDVI Analysis</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Sentinel-2 NDVI Analysis</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Aggregates Band 4 (Red) and Band 8 (Near-Infrared) radiometric scans at 10-meter resolution for real-time foliage index zones mapping.
               </p>
             </CardContent>
@@ -241,11 +241,11 @@ export default function Landing() {
           {/* Card 3: Weather Intell */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-primary dark:text-primary-300 border border-slate-200 dark:border-white/10">
                 <CloudSun className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">Weather Frequencies</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Weather Frequencies</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Retrieves current canopy weather values and 24-hour precipitation forecasts via OpenWeatherMap APIs to predict fungal risk zones.
               </p>
             </CardContent>
@@ -254,11 +254,11 @@ export default function Landing() {
           {/* Card 4: IoT Sensors */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-primary dark:text-primary-300 border border-slate-200 dark:border-white/10">
                 <Activity className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">IoT Hardware Telemetry</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">IoT Hardware Telemetry</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 ESP32 nodes collecting high-frequency soil moisture profiles and air temperature metrics sent directly via HTTP endpoints.
               </p>
             </CardContent>
@@ -267,11 +267,11 @@ export default function Landing() {
           {/* Card 5: Recommendation engine */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-primary dark:text-primary-300 border border-slate-200 dark:border-white/10">
                 <Brain className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">Advisory Engine</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Advisory Engine</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Zero-noise cross-verification logic. Flagged recommendations require at least two independent sensor metrics to trigger.
               </p>
             </CardContent>
@@ -280,11 +280,11 @@ export default function Landing() {
           {/* Card 6: SECURE HARDWARE SHELL */}
           <Card className="hover:border-[#C6D1BD] transition-all duration-300 bg-gradient-to-br from-green-50/30 to-[#E8F5E9]/10">
             <CardContent className="pt-6 space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100/40 text-[#2E7D32] border border-green-200">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100/40 text-primary dark:text-primary-300 border border-green-200">
                 <Shield className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">Hardware Authenticator</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Hardware Authenticator</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Restricted authorization scopes verifying hardware API signatures to prevent data tampering across distributed telemetry arrays.
               </p>
             </CardContent>
@@ -339,7 +339,7 @@ export default function Landing() {
             {/* Widget Header */}
             <div className="flex items-center justify-between border-b border-slate-900 pb-4">
               <div>
-                <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wider">KAIROS Engine Dashboard Preview</span>
+                <span className="text-[9px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">KAIROS Engine Dashboard Preview</span>
                 <h4 className="text-sm font-bold text-white mt-0.5">{selectedDemo.name}</h4>
               </div>
               <Badge className="bg-slate-900 text-green-400 border border-green-800/30 text-[9px] py-0.5 font-bold">
@@ -350,19 +350,19 @@ export default function Landing() {
             {/* Quick telemetry metrics */}
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-slate-900/60 p-3 rounded-lg border border-slate-900">
-                <span className="text-[8px] uppercase font-bold text-slate-500 flex items-center">
+                <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-slate-400 flex items-center">
                   <Droplets className="h-3 w-3 mr-1 text-blue-500" /> Soil moisture
                 </span>
                 <p className="text-base font-extrabold text-white mt-1">{selectedDemo.moisture}%</p>
               </div>
               <div className="bg-slate-900/60 p-3 rounded-lg border border-slate-900">
-                <span className="text-[8px] uppercase font-bold text-slate-500 flex items-center">
+                <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-slate-400 flex items-center">
                   <Thermometer className="h-3 w-3 mr-1 text-amber-500" /> Air Temp
                 </span>
                 <p className="text-base font-extrabold text-white mt-1">{selectedDemo.temp}°C</p>
               </div>
               <div className="bg-slate-900/60 p-3 rounded-lg border border-slate-900">
-                <span className="text-[8px] uppercase font-bold text-slate-500 flex items-center">
+                <span className="text-[8px] uppercase font-bold text-slate-500 dark:text-slate-400 flex items-center">
                   <Layers className="h-3 w-3 mr-1 text-emerald-500" /> NDVI Value
                 </span>
                 <p className="text-base font-extrabold text-white mt-1">{selectedDemo.ndvi}</p>
@@ -385,7 +385,7 @@ export default function Landing() {
             {/* Simulated Recommendation block */}
             <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-900/90 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] uppercase font-bold text-[#FFB300] tracking-wider flex items-center">
+                <span className="text-[9px] uppercase font-bold text-highlight dark:text-highlight-300 tracking-wider flex items-center">
                   <Brain className="h-3.5 w-3.5 mr-1" /> Agronomist advisory directive
                 </span>
                 {selectedDemo.alert !== 'None' && (
@@ -429,35 +429,35 @@ export default function Landing() {
       {/* ─── PUBLIC TECHNOLOGY SCHEMATICS ────────────────────────────────────────── */}
       <section className="px-6 py-20 max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-2">
-          <Badge variant="secondary" className="px-2.5 py-0.5 text-[9px] uppercase font-bold tracking-wider text-[#2E7D32]">Orbital & Neural Infrastructure</Badge>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">System Integration Schematic</h2>
-          <p className="text-xs text-slate-500 leading-normal max-w-sm mx-auto">
+          <Badge variant="secondary" className="px-2.5 py-0.5 text-[9px] uppercase font-bold tracking-wider text-primary dark:text-primary-300">Orbital & Neural Infrastructure</Badge>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">System Integration Schematic</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal max-w-sm mx-auto">
             How KAIROS syncs Sentinel constellations, physical ESP32 nodes, and CNN model engines.
           </p>
         </div>
 
         {/* Dynamic visual grid */}
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="bg-white p-5 rounded-xl border border-[#DCE3D6]/70 space-y-3 shadow-sm">
+          <div className="bg-white dark:bg-dark-surface p-5 rounded-xl border border-slate-200 dark:border-white/10/70 space-y-3 shadow-sm">
             <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Level 1: Space Segment</span>
-            <h4 className="text-sm font-bold text-slate-900">Sentinel-2 Constellation</h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white">Sentinel-2 Constellation</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Orbital spacecraft scanning earth terrain across 13 spectral bands. Returns raw NIR data to map canopy chlorophyll indexes.
             </p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-[#DCE3D6]/70 space-y-3 shadow-sm border-l-2 border-l-[#2E7D32]">
+          <div className="bg-white dark:bg-dark-surface p-5 rounded-xl border border-slate-200 dark:border-white/10/70 space-y-3 shadow-sm border-l-2 border-l-[#2E7D32]">
             <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Level 2: Ground Segment</span>
-            <h4 className="text-sm font-bold text-slate-900">IoT Edge Sensor Mesh</h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white">IoT Edge Sensor Mesh</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               DHT11 relative humidity and capacitance soil moisture nodes operating at 12-bit ADC accuracy transmitting every 30s.
             </p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-[#DCE3D6]/70 space-y-3 shadow-sm">
+          <div className="bg-white dark:bg-dark-surface p-5 rounded-xl border border-slate-200 dark:border-white/10/70 space-y-3 shadow-sm">
             <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Level 3: Core Engine</span>
-            <h4 className="text-sm font-bold text-slate-900">CNN Model Inference</h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white">CNN Model Inference</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               MobileNetV3Small network weights optimized via Adam optimizer performing pixel classification on leaf snapshots.
             </p>
           </div>
@@ -465,19 +465,19 @@ export default function Landing() {
       </section>
 
       {/* ─── FOOTER ──────────────────────────────────────────────────────────────── */}
-      <footer className="border-t border-[#DCE3D6]/70 bg-white/50 px-6 py-12 text-xs text-slate-500">
+      <footer className="border-t border-slate-200 dark:border-white/10/70 bg-white dark:bg-dark-surface/50 px-6 py-12 text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#2E7D32] text-white">
               <Compass className="h-4 w-4" />
             </div>
-            <span className="font-extrabold tracking-tight text-slate-900">KAIROS</span>
+            <span className="font-extrabold tracking-tight text-slate-900 dark:text-white">KAIROS</span>
           </div>
 
           <div className="flex space-x-6 text-slate-400">
-            <span className="hover:text-slate-600 cursor-pointer">SaaS Terms</span>
-            <span className="hover:text-slate-600 cursor-pointer">API Schemas</span>
-            <span className="hover:text-slate-600 cursor-pointer">Hackathon Docs</span>
+            <span className="hover:text-slate-600 dark:text-slate-400 cursor-pointer">SaaS Terms</span>
+            <span className="hover:text-slate-600 dark:text-slate-400 cursor-pointer">API Schemas</span>
+            <span className="hover:text-slate-600 dark:text-slate-400 cursor-pointer">Hackathon Docs</span>
           </div>
 
           <p>© 2026 KAIROS Platform. SIH Precision Agriculture Support Panel.</p>

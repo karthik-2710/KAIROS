@@ -69,13 +69,13 @@ export function Layout() {
   // Loading Screen
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#F7F9F5]">
+      <div className="flex h-screen w-screen items-center justify-center bg-background dark:bg-dark-bg transition-colors duration-300">
         <div className="flex flex-col items-center space-y-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] text-white shadow-md">
             <Sprout className="h-6 w-6 animate-bounce" />
           </div>
-          <div className="flex items-center space-x-2 text-xs font-semibold text-slate-500 uppercase tracking-widest pl-1">
-            <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2E7D32]" />
+          <div className="flex items-center space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
             <span>KAIROS Booting...</span>
           </div>
         </div>
@@ -86,17 +86,17 @@ export function Layout() {
   // Error state
   if (isError) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#F7F9F5] p-4">
-        <Card className="max-w-md w-full text-center">
+      <div className="flex h-screen w-screen items-center justify-center bg-background dark:bg-dark-bg p-4 transition-colors duration-300">
+        <Card className="max-w-md w-full text-center border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface shadow-sm rounded-3xl">
           <CardContent className="pt-6">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
               ⚠️
             </div>
-            <h3 className="mt-4 text-base font-bold text-slate-900">Database Connection Failed</h3>
-            <p className="mt-2 text-xs text-slate-500 leading-normal">
+            <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">Database Connection Failed</h3>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-normal">
               Could not retrieve agricultural assets. Please verify that your KAIROS local database file exists or is correctly seeded.
             </p>
-            <Button onClick={() => refetch()} variant="outline" className="mt-6 w-full">
+            <Button onClick={() => refetch()} variant="outline" className="mt-6 w-full border-slate-200 dark:border-white/10 dark:text-slate-200">
               Retry Connection
             </Button>
           </CardContent>
@@ -108,14 +108,14 @@ export function Layout() {
   // Empty State (no farms defined yet)
   if (farms.length === 0 && !['/login', '/register', '/app/farms'].includes(location.pathname)) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#F7F9F5] p-4">
-        <Card className="max-w-md w-full text-center">
+      <div className="flex h-screen w-screen items-center justify-center bg-background dark:bg-dark-bg p-4 transition-colors duration-300">
+        <Card className="max-w-md w-full text-center border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface shadow-sm rounded-3xl">
           <CardContent className="pt-8 pb-8">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-50 to-[#E8F5E9] text-[#2E7D32] border border-[#DCE3D6]">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary border border-primary/20">
               <Sprout className="h-7 w-7" />
             </div>
-            <h3 className="mt-6 text-base font-bold text-slate-900">No Farms Connected</h3>
-            <p className="mt-2 text-xs text-slate-500 leading-normal max-w-xs mx-auto">
+            <h3 className="mt-6 text-base font-bold text-slate-900 dark:text-white">No Farms Connected</h3>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-normal max-w-xs mx-auto">
               Welcome to KAIROS! Register your first farm parcel to activate IoT feeds, satellite NDVI, and disease scanning features.
             </p>
             <Button onClick={() => navigate('/app/farms', { state: { openModal: true } })} className="mt-6 w-full">
@@ -128,7 +128,7 @@ export function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F7F9F5] bg-grid-pattern">
+    <div className="flex min-h-screen bg-background dark:bg-dark-bg bg-grid-pattern transition-colors duration-300">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Navbar 

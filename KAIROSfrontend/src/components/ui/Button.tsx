@@ -10,10 +10,10 @@ const buttonVariants = cva(
       variant: {
         default: "bg-[#2E7D32] text-white hover:bg-[#1B5E20] shadow-sm active:scale-[0.98]",
         destructive: "bg-red-600 text-white hover:bg-red-700 active:scale-[0.98]",
-        outline: "border border-[#DCE3D6] bg-white text-slate-700 hover:bg-[#F7F9F5] hover:text-slate-900 active:scale-[0.98]",
-        secondary: "bg-[#EDF1EA] text-slate-800 hover:bg-[#DCE3D6] active:scale-[0.98]",
-        ghost: "hover:bg-[#EDF1EA] text-slate-700 hover:text-slate-900 active:scale-[0.98]",
-        link: "text-[#2E7D32] underline-offset-4 hover:underline",
+        outline: "border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface text-slate-700 dark:text-slate-300 hover:bg-background dark:bg-dark-bg hover:text-slate-900 dark:hover:text-white dark:text-white active:scale-[0.98]",
+        secondary: "bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:bg-white dark:bg-dark-surface/10 active:scale-[0.98]",
+        ghost: "hover:bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white dark:text-white active:scale-[0.98]",
+        link: "text-primary dark:text-primary-300 underline-offset-4 hover:underline",
         accent: "bg-[#FFB300] text-slate-950 hover:bg-[#FFA000] shadow-sm active:scale-[0.98]",
       },
       size: {

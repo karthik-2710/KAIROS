@@ -22,7 +22,7 @@ const renderTextWithLinks = (text: string) => {
       parts.push(text.substring(lastIndex, match.index));
     }
     parts.push(
-      <Link key={match.index} to={match[2]} className="text-[#2E7D32] underline font-semibold hover:text-[#1B5E20] transition-colors">
+      <Link key={match.index} to={match[2]} className="text-primary dark:text-primary-300 underline font-semibold hover:text-primary-900 dark:text-primary-200 transition-colors">
         {match[1]}
       </Link>
     );
@@ -113,7 +113,7 @@ export function Chatbot() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsOpen(true)}
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] text-white shadow-lg shadow-green-900/20 hover:shadow-xl transition-all duration-300"
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-900 text-white shadow-lg shadow-green-900/20 hover:shadow-xl transition-all duration-300"
             >
               <MessageSquare className="h-6 w-6" />
             </motion.button>
@@ -128,12 +128,12 @@ export function Chatbot() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute bottom-0 right-0 w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] flex flex-col rounded-2xl bg-white shadow-2xl overflow-hidden border border-slate-100"
+              className="absolute bottom-0 right-0 w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] flex flex-col rounded-2xl bg-white dark:bg-dark-surface shadow-2xl overflow-hidden border border-slate-100"
             >
               {/* Header */}
-              <div className="flex items-center justify-between bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] px-4 py-3 text-white">
+              <div className="flex items-center justify-between bg-gradient-to-r from-primary to-primary-900 px-4 py-3 text-white">
                 <div className="flex items-center space-x-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-dark-surface/20 backdrop-blur-sm">
                     <Bot className="h-4 w-4" />
                   </div>
                   <div>
@@ -143,14 +143,14 @@ export function Chatbot() {
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="rounded-full p-1.5 hover:bg-white/20 transition-colors"
+                  className="rounded-full p-1.5 hover:bg-white dark:bg-dark-surface/20 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto bg-slate-50 p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-white/5 dark:bg-white dark:bg-dark-surface/5 p-4 space-y-4">
                 {messages.map((msg) => (
                   <div 
                     key={msg.id} 
@@ -158,13 +158,13 @@ export function Chatbot() {
                   >
                     <div className={`flex max-w-[80%] items-end space-x-2 ${msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                       <div className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${msg.sender === 'user' ? 'bg-slate-200' : 'bg-green-100 text-green-700'}`}>
-                        {msg.sender === 'user' ? <User className="h-3.5 w-3.5 text-slate-600" /> : <Bot className="h-3.5 w-3.5" />}
+                        {msg.sender === 'user' ? <User className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400 dark:text-slate-400" /> : <Bot className="h-3.5 w-3.5" />}
                       </div>
                       <div 
                         className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
                           msg.sender === 'user' 
-                            ? 'bg-[#2E7D32] text-white rounded-br-sm' 
-                            : 'bg-white text-slate-700 border border-slate-100 rounded-bl-sm'
+                            ? 'bg-primary dark:bg-primary-600 text-white rounded-br-sm' 
+                            : 'bg-white dark:bg-dark-surface text-slate-700 dark:text-slate-300 dark:text-slate-300 border border-slate-100 rounded-bl-sm'
                         }`}
                       >
                         {msg.sender === 'bot' ? renderTextWithLinks(t(msg.text)) : msg.text}
@@ -179,7 +179,7 @@ export function Chatbot() {
                       <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
                         <Bot className="h-3.5 w-3.5" />
                       </div>
-                      <div className="rounded-2xl rounded-bl-sm bg-white px-4 py-3 shadow-sm border border-slate-100">
+                      <div className="rounded-2xl rounded-bl-sm bg-white dark:bg-dark-surface px-4 py-3 shadow-sm border border-slate-100">
                         <div className="flex space-x-1">
                           <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300" style={{ animationDelay: '0ms' }}></div>
                           <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300" style={{ animationDelay: '150ms' }}></div>
@@ -193,23 +193,23 @@ export function Chatbot() {
               </div>
 
               {/* Input Area */}
-              <div className="bg-white p-3 border-t border-slate-100">
+              <div className="bg-white dark:bg-dark-surface p-3 border-t border-slate-100">
                 <form 
                   onSubmit={handleSend}
-                  className="flex items-center space-x-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-1.5 focus-within:border-green-500 focus-within:ring-1 focus-within:ring-green-500 transition-all"
+                  className="flex items-center space-x-2 rounded-full border border-slate-200 bg-slate-50 dark:bg-white/5 dark:bg-white dark:bg-dark-surface/5 px-2 py-1.5 focus-within:border-green-500 focus-within:ring-1 focus-within:ring-green-500 transition-all"
                 >
                   <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={t("Ask about KAIROS features...")}
-                    className="flex-1 bg-transparent px-3 py-1.5 text-sm text-slate-700 placeholder-slate-400 focus:outline-none"
+                    className="flex-1 bg-transparent px-3 py-1.5 text-sm text-slate-700 dark:text-slate-300 dark:text-slate-300 placeholder-slate-400 focus:outline-none"
                     disabled={isTyping}
                   />
                   <button
                     type="submit"
                     disabled={!input.trim() || isTyping}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2E7D32] text-white disabled:opacity-50 hover:bg-[#1B5E20] transition-colors"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-primary dark:bg-primary-600 text-white disabled:opacity-50 hover:bg-[#1B5E20] transition-colors"
                   >
                     {isTyping ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   </button>

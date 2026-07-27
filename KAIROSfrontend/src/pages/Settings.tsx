@@ -167,9 +167,9 @@ export default function Settings() {
     <div className="space-y-6">
       
       {/* Page Header */}
-      <div className="border-b border-[#EDF1EA]/80 pb-4">
-        <h1 className="text-xl font-bold tracking-tight text-slate-900">System Settings</h1>
-        <p className="text-xs text-slate-500">
+      <div className="border-b border-slate-200/50 dark:border-white/5 pb-4">
+        <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">System Settings</h1>
+        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-2">
           Configure profile details, hardware interfaces, third-party APIs, and system preferences.
         </p>
       </div>
@@ -181,10 +181,10 @@ export default function Settings() {
         <div className="space-y-1">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`flex w-full items-center space-x-2.5 rounded-lg px-3 py-2.5 text-left text-xs font-bold transition ${
+            className={`flex w-full items-center space-x-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition shadow-sm ${
               activeTab === 'profile'
-                ? 'bg-white border border-[#DCE3D6] text-[#2E7D32] shadow-sm'
-                : 'text-slate-500 hover:bg-[#EDF1EA]/50 hover:text-slate-800'
+                ? 'bg-white dark:bg-dark-surface border border-slate-200/70 dark:border-white/10 text-primary dark:text-primary-300 shadow-premium'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <User className="h-4 w-4" />
@@ -193,10 +193,10 @@ export default function Settings() {
 
           <button
             onClick={() => setActiveTab('api')}
-            className={`flex w-full items-center space-x-2.5 rounded-lg px-3 py-2.5 text-left text-xs font-bold transition ${
+            className={`flex w-full items-center space-x-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition shadow-sm ${
               activeTab === 'api'
-                ? 'bg-white border border-[#DCE3D6] text-[#2E7D32] shadow-sm'
-                : 'text-slate-500 hover:bg-[#EDF1EA]/50 hover:text-slate-800'
+                ? 'bg-white dark:bg-dark-surface border border-slate-200/70 dark:border-white/10 text-primary dark:text-primary-300 shadow-premium'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Key className="h-4 w-4" />
@@ -205,10 +205,10 @@ export default function Settings() {
 
           <button
             onClick={() => setActiveTab('hardware')}
-            className={`flex w-full items-center space-x-2.5 rounded-lg px-3 py-2.5 text-left text-xs font-bold transition ${
+            className={`flex w-full items-center space-x-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition shadow-sm ${
               activeTab === 'hardware'
-                ? 'bg-white border border-[#DCE3D6] text-[#2E7D32] shadow-sm'
-                : 'text-slate-500 hover:bg-[#EDF1EA]/50 hover:text-slate-800'
+                ? 'bg-white dark:bg-dark-surface border border-slate-200/70 dark:border-white/10 text-primary dark:text-primary-300 shadow-premium'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Cpu className="h-4 w-4" />
@@ -217,10 +217,10 @@ export default function Settings() {
 
           <button
             onClick={() => setActiveTab('preferences')}
-            className={`flex w-full items-center space-x-2.5 rounded-lg px-3 py-2.5 text-left text-xs font-bold transition ${
+            className={`flex w-full items-center space-x-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition shadow-sm ${
               activeTab === 'preferences'
-                ? 'bg-white border border-[#DCE3D6] text-[#2E7D32] shadow-sm'
-                : 'text-slate-500 hover:bg-[#EDF1EA]/50 hover:text-slate-800'
+                ? 'bg-white dark:bg-dark-surface border border-slate-200/70 dark:border-white/10 text-primary dark:text-primary-300 shadow-premium'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Globe className="h-4 w-4" />
@@ -235,11 +235,11 @@ export default function Settings() {
           {activeTab === 'profile' && (
             <div className="space-y-6">
               {/* Profile Config Card */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <User className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> General Profile Parameters
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <User className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> General Profile Parameters
                     </h3>
                   </div>
 
@@ -252,7 +252,7 @@ export default function Settings() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Farmer Name</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Farmer Name</label>
                         <Input
                           type="text"
                           value={name}
@@ -262,11 +262,11 @@ export default function Settings() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Agricultural Role</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Agricultural Role</label>
                         <select
                           value={role}
                           onChange={(e) => setRole(e.target.value)}
-                          className="flex h-10 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                          className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600"
                         >
                           <option value="Farm Owner">Farm Owner</option>
                           <option value="Agronomist">Agronomist</option>
@@ -276,7 +276,7 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Email Address</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Email Address</label>
                       <Input
                         type="email"
                         value={email}
@@ -293,11 +293,11 @@ export default function Settings() {
               </Card>
 
               {/* Password credentials Security Card */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Lock className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> Credentials Security
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Lock className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> Credentials Security
                     </h3>
                   </div>
 
@@ -309,7 +309,7 @@ export default function Settings() {
                     )}
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Current Password</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Current Password</label>
                       <Input
                         type="password"
                         placeholder="••••••••"
@@ -322,7 +322,7 @@ export default function Settings() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">New Password</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">New Password</label>
                         <Input
                           type="password"
                           placeholder="At least 8 characters"
@@ -334,7 +334,7 @@ export default function Settings() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Confirm New Password</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Confirm New Password</label>
                         <Input
                           type="password"
                           placeholder="Re-enter password"
@@ -354,11 +354,11 @@ export default function Settings() {
               </Card>
 
               {/* Notification Configuration Card */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Bell className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> Alert Notifications
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Bell className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> Alert Notifications
                     </h3>
                   </div>
 
@@ -377,8 +377,8 @@ export default function Settings() {
                           onChange={(e) => setEmailAlerts(e.target.checked)}
                           className="sr-only peer cursor-pointer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
-                        <span className="ml-3 text-xs font-semibold text-slate-700">Email alerts for crop disease warnings</span>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-dark-surface after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                        <span className="ml-3 text-xs font-semibold text-slate-700 dark:text-slate-300">Email alerts for crop disease warnings</span>
                       </label>
 
                       <label className="relative inline-flex items-center cursor-pointer select-none block pt-2">
@@ -388,8 +388,8 @@ export default function Settings() {
                           onChange={(e) => setSmsAlerts(e.target.checked)}
                           className="sr-only peer cursor-pointer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
-                        <span className="ml-3 text-xs font-semibold text-slate-700">SMS critical soil warnings (cellular gateway)</span>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-dark-surface after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                        <span className="ml-3 text-xs font-semibold text-slate-700 dark:text-slate-300">SMS critical soil warnings (cellular gateway)</span>
                       </label>
                     </div>
 
@@ -407,16 +407,16 @@ export default function Settings() {
             <div className="space-y-6">
               
               {/* API Client Keys */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Key className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> Developer API Client Token
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Key className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> Developer API Client Token
                     </h3>
                   </div>
 
                   <div className="space-y-3 text-xs">
-                    <p className="text-slate-500 leading-normal">
+                    <p className="text-slate-500 dark:text-slate-400 leading-normal">
                       Generate secret client tokens to request canopy telemetry streams and NDVI averages through our endpoints.
                     </p>
 
@@ -425,10 +425,10 @@ export default function Settings() {
                         type="text"
                         value={apiKey}
                         readOnly
-                        className="font-mono text-xs bg-slate-50 border-[#DCE3D6] text-slate-700 flex-1"
+                        className="font-mono text-xs bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 flex-1"
                       />
                       <Button onClick={copyToClipboard} variant="outline" className="h-10 px-3">
-                        {copied ? <Check className="h-4.5 w-4.5 text-green-600" /> : <Copy className="h-4.5 w-4.5 text-slate-600" />}
+                        {copied ? <Check className="h-4.5 w-4.5 text-green-600" /> : <Copy className="h-4.5 w-4.5 text-slate-600 dark:text-slate-400" />}
                       </Button>
                     </div>
 
@@ -442,11 +442,11 @@ export default function Settings() {
               </Card>
 
               {/* 3rd Party APIs Satellite & Weather */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Satellite className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> Third-Party API Configuration
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Satellite className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> Third-Party API Configuration
                     </h3>
                   </div>
 
@@ -458,7 +458,7 @@ export default function Settings() {
                     )}
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Sentinel Copernicus API Secret Token</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Sentinel Copernicus API Secret Token</label>
                       <Input
                         type="password"
                         value={sentinelToken}
@@ -468,7 +468,7 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">OpenWeatherMap API Authentication Key</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">OpenWeatherMap API Authentication Key</label>
                       <Input
                         type="password"
                         value={openWeatherKey}
@@ -489,11 +489,11 @@ export default function Settings() {
 
           {/* TAB 3: ESP32 Hardware Grid */}
           {activeTab === 'hardware' && (
-            <Card>
-              <CardContent className="p-6 space-y-4">
-                <div className="border-b border-[#EDF1EA]/50 pb-2">
-                  <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                    <Cpu className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> ESP32 Edge Mesh Configuration
+            <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+              <CardContent className="p-8 space-y-6">
+                <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                    <Cpu className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> ESP32 Edge Mesh Configuration
                   </h3>
                 </div>
 
@@ -506,11 +506,11 @@ export default function Settings() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">LoRa Frequency Band</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">LoRa Frequency Band</label>
                       <select
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value)}
-                        className="flex h-10 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                        className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600"
                       >
                         <option value="868 MHz">868 MHz (Europe / India)</option>
                         <option value="915 MHz">915 MHz (North America)</option>
@@ -519,7 +519,7 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Transmission Interval Rate (Seconds)</label>
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Transmission Interval Rate (Seconds)</label>
                       <Input
                         type="number"
                         value={transmitInterval}
@@ -530,8 +530,8 @@ export default function Settings() {
                     </div>
                   </div>
 
-                  <div className="bg-[#EDF1EA]/30 border border-[#DCE3D6]/50 rounded-xl p-3.5 text-[10px] text-slate-500 leading-normal flex items-start space-x-2">
-                    <Info className="h-4.5 w-4.5 text-[#2E7D32] shrink-0 mt-0.5" />
+                  <div className="bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5/30 border border-slate-200 dark:border-white/10/50 rounded-xl p-3.5 text-[10px] text-slate-500 dark:text-slate-400 leading-normal flex items-start space-x-2">
+                    <Info className="h-4.5 w-4.5 text-primary dark:text-primary-300 shrink-0 mt-0.5" />
                     <span>
                       Hardware interval rates define how frequently ESP32 capacitance moisture sensor nodes broadcast. Settings under 10 seconds exhaust battery nodes within 60 days.
                     </span>
@@ -550,11 +550,11 @@ export default function Settings() {
             <div className="space-y-6">
               
               {/* AI Model Settings */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Brain className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> Convolutional AI Model Configurations
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Brain className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> Convolutional AI Model Configurations
                     </h3>
                   </div>
 
@@ -567,11 +567,11 @@ export default function Settings() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Neural Backbone</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Neural Backbone</label>
                         <select
                           value={modelType}
                           onChange={(e) => setModelType(e.target.value)}
-                          className="flex h-10 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                          className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600"
                         >
                           <option value="MobileNetV3-Small">MobileNetV3-Small (Fast / Efficient)</option>
                           <option value="MobileNetV3-Large">MobileNetV3-Large (High Precision)</option>
@@ -581,9 +581,9 @@ export default function Settings() {
 
                       {/* Confidence Threshold slider */}
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-wider px-0.5">
+                        <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-0.5">
                           <span>Confidence threshold</span>
-                          <span className="text-[#2E7D32]">{confidenceThreshold}%</span>
+                          <span className="text-primary dark:text-primary-300">{confidenceThreshold}%</span>
                         </div>
                         <input
                           type="range"
@@ -591,7 +591,7 @@ export default function Settings() {
                           max="98"
                           value={confidenceThreshold}
                           onChange={(e) => setConfidenceThreshold(parseInt(e.target.value))}
-                          className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#2E7D32] mt-3"
+                          className="w-full h-1 bg-slate-100 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#2E7D32] mt-3"
                         />
                       </div>
                     </div>
@@ -604,11 +604,11 @@ export default function Settings() {
               </Card>
 
               {/* General localization settings */}
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Globe className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> UI Localization & Display
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-6">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Globe className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> UI Localization & Display
                     </h3>
                   </div>
 
@@ -622,11 +622,11 @@ export default function Settings() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       {/* Language */}
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Language Localization</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Language Localization</label>
                         <select
                           value={language}
                           onChange={(e) => setLanguage(e.target.value)}
-                          className="flex h-10 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                          className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600"
                         >
                           <option value="English">English</option>
                           <option value="Spanish">Español (Spanish)</option>
@@ -637,7 +637,7 @@ export default function Settings() {
 
                       {/* Dark Mode Toggle */}
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Display Color Theme</label>
+                        <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Display Color Theme</label>
                         <div className="flex items-center space-x-3 pt-2">
                           <label className="relative inline-flex items-center cursor-pointer select-none">
                             <input
@@ -646,8 +646,8 @@ export default function Settings() {
                               onChange={(e) => setDarkMode(e.target.checked)}
                               className="sr-only peer cursor-pointer"
                             />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
-                            <span className="ml-3 text-xs font-semibold text-slate-700">Dark Mode theme</span>
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-dark-surface after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                            <span className="ml-3 text-xs font-semibold text-slate-700 dark:text-slate-300">Dark Mode theme</span>
                           </label>
                         </div>
                       </div>
@@ -661,15 +661,15 @@ export default function Settings() {
               </Card>
 
               {/* About Card Panel */}
-              <Card>
-                <CardContent className="p-6 space-y-3.5 text-xs">
-                  <div className="border-b border-[#EDF1EA]/50 pb-2">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center">
-                      <Info className="h-4.5 w-4.5 mr-1.5 text-[#2E7D32]" /> System Specifications
+              <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+                <CardContent className="p-8 space-y-4 text-sm">
+                  <div className="border-b border-slate-100 dark:border-white/5 pb-4">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center">
+                      <Info className="h-5 w-5 mr-2 text-primary dark:text-primary-300" /> System Specifications
                     </h3>
                   </div>
 
-                  <div className="space-y-1 leading-relaxed text-slate-500">
+                  <div className="space-y-1 leading-relaxed text-slate-500 dark:text-slate-400">
                     <p>• Build Core Version: <strong>1.2.0-sih</strong></p>
                     <p>• Database Driver: <strong>SQLite Mock-Fallback v3.45</strong></p>
                     <p>• Sentinel spacecraft pass: <strong>Scheduled in 3 days</strong></p>

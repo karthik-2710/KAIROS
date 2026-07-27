@@ -77,7 +77,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F7F9F5]">
+    <div className="flex min-h-screen bg-background dark:bg-dark-bg">
       
       {/* ─── LEFT COLUMN: PREMIUM AGRICULTURAL SCHEMATIC ───────────────────────────── */}
       <div className="relative hidden w-1/2 flex-col justify-between bg-gradient-to-br from-[#122c15] via-[#091a0c] to-[#040c06] p-12 text-white lg:flex overflow-hidden">
@@ -119,12 +119,12 @@ export default function Login() {
 
         {/* Top logo */}
         <div className="relative z-10 flex items-center space-x-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] text-white border border-[#DCE3D6]/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-900 text-white border border-slate-200 dark:border-white/10/20">
             <Compass className="h-5 w-5" />
           </div>
           <div>
             <span className="text-sm font-extrabold tracking-tight">KAIROS</span>
-            <span className="block text-[8px] font-bold text-[#2E7D32] uppercase tracking-wider -mt-1">Precision Ag</span>
+            <span className="block text-[8px] font-bold text-primary dark:text-primary-300 uppercase tracking-wider -mt-1">Precision Ag</span>
           </div>
         </div>
 
@@ -139,9 +139,9 @@ export default function Login() {
         </div>
 
         {/* Bottom review card */}
-        <div className="relative z-10 rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur-md">
+        <div className="relative z-10 rounded-2xl bg-white dark:bg-dark-surface/5 border border-white/10 p-4 backdrop-blur-md">
           <div className="flex items-center space-x-2.5">
-            <ShieldCheck className="h-5 w-5 text-[#FFB300] shrink-0" />
+            <ShieldCheck className="h-5 w-5 text-highlight dark:text-highlight-300 shrink-0" />
             <span className="text-xs font-semibold">Zero-Noise Verification Active</span>
           </div>
           <p className="mt-2 text-[10px] text-slate-400 leading-relaxed">
@@ -151,24 +151,24 @@ export default function Login() {
       </div>
 
       {/* ─── RIGHT COLUMN: GLASSMORPHISM LOGIN FORM CARD ───────────────────────────── */}
-      <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2 bg-[#F7F9F5] bg-grid-pattern relative">
+      <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2 bg-background dark:bg-dark-bg bg-grid-pattern relative">
         {/* Mobile top branding */}
         <div className="absolute top-6 left-6 flex items-center space-x-2 lg:hidden">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#2E7D32] text-white">
             <Compass className="h-4.5 w-4.5" />
           </div>
-          <span className="text-xs font-bold tracking-tight text-slate-900">KAIROS</span>
+          <span className="text-xs font-bold tracking-tight text-slate-900 dark:text-white">KAIROS</span>
         </div>
 
         <div className="w-full max-w-sm space-y-6">
           <div className="space-y-1 text-center lg:text-left">
-            <h3 className="text-xl font-bold tracking-tight text-slate-900">Access Analytics Panel</h3>
-            <p className="text-xs text-slate-500">Sign in to check live crop indices.</p>
+            <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Access Analytics Panel</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Sign in to check live crop indices.</p>
           </div>
 
           {/* Glassmorphic Login Container */}
-          <Card className="glass border-[#DCE3D6]/70 shadow-xl bg-white/75 backdrop-blur-md">
-            <CardContent className="pt-6 space-y-4">
+          <Card className="glass border-slate-200/70 dark:border-white/10 shadow-premium bg-white/90 dark:bg-dark-surface/90 backdrop-blur-md rounded-[2rem]">
+            <CardContent className="pt-8 px-8 pb-8 space-y-4">
               <form onSubmit={handleSubmit} className="space-y-4">
                 {generalError && (
                   <div className="rounded-lg bg-red-50 border border-red-100 p-2.5 text-xs font-semibold text-red-700">
@@ -178,7 +178,7 @@ export default function Login() {
 
                 {/* Email Address */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-600 pl-0.5 flex items-center">
+                  <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                     <Mail className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> Email Address
                   </label>
                   <Input
@@ -195,10 +195,10 @@ export default function Login() {
                 {/* Password field */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center px-0.5">
-                    <label className="text-[11px] font-bold text-slate-600 flex items-center">
+                    <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center">
                       <Lock className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> Password
                     </label>
-                    <span className="text-[10px] text-[#2E7D32] hover:underline cursor-pointer font-medium">Forgot password?</span>
+                    <span className="text-[10px] text-primary dark:text-primary-300 hover:underline cursor-pointer font-medium">Forgot password?</span>
                   </div>
                   <Input
                     type="password"
@@ -213,18 +213,18 @@ export default function Login() {
 
                 {/* Remember me option */}
                 <div className="flex items-center justify-between px-0.5 pt-1">
-                  <label className="flex items-center space-x-2 cursor-pointer text-xs text-slate-600 font-semibold select-none">
+                  <label className="flex items-center space-x-2 cursor-pointer text-xs text-slate-600 dark:text-slate-400 font-semibold select-none">
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="rounded border-[#DCE3D6] text-[#2E7D32] focus:ring-green-600 h-4 w-4 transition cursor-pointer"
+                      className="rounded border-slate-200 dark:border-white/10 text-primary dark:text-primary-300 focus:ring-green-600 h-4 w-4 transition cursor-pointer"
                     />
                     <span>Remember this machine</span>
                   </label>
                 </div>
 
-                <Button type="submit" isLoading={loading} className="w-full mt-2 bg-[#2E7D32] hover:bg-[#1B5E20]">
+                <Button type="submit" isLoading={loading} className="w-full mt-4 bg-primary hover:bg-primary-600 rounded-xl py-6 font-bold shadow-sm">
                   Enter Application Panel <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>
@@ -232,10 +232,10 @@ export default function Login() {
               {/* Social authentication separator */}
               <div className="relative py-2">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#EDF1EA]" />
+                  <div className="w-full border-t border-slate-100 dark:border-white/5" />
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
-                  <span className="bg-white px-2">Or verify with SSO</span>
+                  <span className="bg-white dark:bg-dark-surface px-2">Or verify with SSO</span>
                 </div>
               </div>
 
@@ -243,7 +243,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => alert("Google Single Sign-On is currently under development.")}
-                className="flex w-full items-center justify-center space-x-2 rounded-lg border border-[#DCE3D6] bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-[#F7F9F5] active:scale-[0.98] transition duration-200"
+                className="flex w-full items-center justify-center space-x-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-4 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-background dark:bg-dark-bg active:scale-[0.98] transition duration-200"
               >
                 {/* Simulated Google colorful G logo */}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
@@ -258,14 +258,14 @@ export default function Login() {
           </Card>
 
           {/* Quick Demo Assist Info */}
-          <div className="rounded-xl border border-[#DCE3D6]/50 bg-[#EDF1EA]/30 p-3 text-center text-[10px] text-slate-500 leading-normal flex items-start space-x-1.5">
-            <Leaf className="h-4 w-4 text-[#2E7D32] shrink-0 mt-0.5" />
+          <div className="rounded-xl border border-slate-200 dark:border-white/10/50 bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5/30 p-3 text-center text-[10px] text-slate-500 dark:text-slate-400 leading-normal flex items-start space-x-1.5">
+            <Leaf className="h-4 w-4 text-primary dark:text-primary-300 shrink-0 mt-0.5" />
             <span>Use default credentials <strong>demo@kairos.ag</strong> / <strong>demo1234</strong> to enter preview mode.</span>
           </div>
 
-          <div className="text-center text-xs text-slate-500">
+          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
             Need an agricultural profile?{' '}
-            <Link to="/register" className="font-semibold text-[#2E7D32] hover:underline">
+            <Link to="/register" className="font-semibold text-primary dark:text-primary-300 hover:underline">
               Register parcel
             </Link>
           </div>

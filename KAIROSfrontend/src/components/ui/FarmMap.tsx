@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { MapContainer, TileLayer, FeatureGroup, GeoJSON, useMap } from 'react-leaflet'
-import { EditControl } from 'react-leaflet-draw'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-draw'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import * as turf from '@turf/turf'
 
@@ -38,6 +38,7 @@ function MapBounds({ geojson }: { geojson: any }) {
 export function FarmMap({ mode, polygon, onChange, ndviColor, height = '400px' }: FarmMapProps) {
   const [mapCenter] = useState<[number, number]>([11.02, 76.95])
   const featureGroupRef = useRef<L.FeatureGroup>(null)
+  const isInternalChange = useRef(false)
 
   // Parse existing polygon if available and format as GeoJSON
   const parsedGeoJSON = React.useMemo(() => {
@@ -86,6 +87,7 @@ export function FarmMap({ mode, polygon, onChange, ndviColor, height = '400px' }
 
   const updateParentGeoJSON = (layer: any) => {
     if (!onChange) return
+    isInternalChange.current = true
     const geojson = layer.toGeoJSON()
     // geojson is a Feature, we want just the Geometry (Polygon)
     const geometry = geojson.geometry
@@ -103,6 +105,12 @@ export function FarmMap({ mode, polygon, onChange, ndviColor, height = '400px' }
   // Effect to load existing polygon into edit mode FeatureGroup
   useEffect(() => {
     if (mode === 'edit' && parsedGeoJSON && featureGroupRef.current) {
+      if (isInternalChange.current) {
+        // Skip re-rendering layers if the change originated from the map drawing tools
+        isInternalChange.current = false
+        return
+      }
+
       const fg = featureGroupRef.current
       fg.clearLayers() // Clear existing to prevent duplicates on remount
       
@@ -113,9 +121,67 @@ export function FarmMap({ mode, polygon, onChange, ndviColor, height = '400px' }
     }
   }, [mode, parsedGeoJSON])
 
+  // Native Leaflet Draw Control implementation to bypass react-leaflet-draw Vite bug
+  const NativeDrawControl = () => {
+    const map = useMap()
+    
+    useEffect(() => {
+      if (mode !== 'edit' || !featureGroupRef.current) return
+      
+      const fg = featureGroupRef.current
+      
+      const drawControl = new L.Control.Draw({
+        edit: { 
+          featureGroup: fg,
+          remove: true
+        },
+        draw: {
+          rectangle: {
+            showArea: false
+          },
+          circle: false,
+          circlemarker: false,
+          marker: false,
+          polyline: false,
+          polygon: {
+            allowIntersection: false,
+            showArea: false,
+          }
+        }
+      })
+      
+      map.addControl(drawControl)
+
+      const onCreated = (e: any) => {
+        fg.addLayer(e.layer)
+        handleCreated(e)
+      }
+
+      map.on(L.Draw.Event.CREATED, onCreated)
+      map.on(L.Draw.Event.EDITED, handleEdited)
+      map.on(L.Draw.Event.DELETED, handleDeleted)
+
+      return () => {
+        map.removeControl(drawControl)
+        map.off(L.Draw.Event.CREATED, onCreated)
+        map.off(L.Draw.Event.EDITED, handleEdited)
+        map.off(L.Draw.Event.DELETED, handleDeleted)
+      }
+    }, [map, mode])
+    
+    return null
+  }
+
   const polyStyle = {
-    color: ndviColor || '#2E7D32',
+    color: ndviColor || '#1F4E46',
     weight: 3,
+    opacity: 1,
+    fillOpacity: 0.25,
+    className: 'farm-polygon-glow' // Will be styled in global CSS if needed
+  }
+
+  const hoverStyle = {
+    weight: 5,
     fillOpacity: 0.4,
   }
 
@@ -125,33 +191,34 @@ export function FarmMap({ mode, polygon, onChange, ndviColor, height = '400px' }
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution="Tiles &copy; Esri &mdash; Source: Esri"
+          zIndex={1}
+        />
+        {/* Esri Reference Layer for Boundaries, Roads, and Labels */}
+        <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          zIndex={2}
         />
         
         <MapBounds geojson={parsedGeoJSON} />
         
         {mode === 'edit' ? (
           <FeatureGroup ref={featureGroupRef}>
-            <EditControl
-              position="topright"
-              onCreated={handleCreated}
-              onEdited={handleEdited}
-              onDeleted={handleDeleted}
-              draw={{
-                rectangle: false,
-                circle: false,
-                circlemarker: false,
-                marker: false,
-                polyline: false,
-                polygon: {
-                  allowIntersection: false,
-                  showArea: true,
-                }
-              }}
-            />
+            <NativeDrawControl />
           </FeatureGroup>
         ) : (
           parsedGeoJSON && (
-            <GeoJSON data={parsedGeoJSON} style={polyStyle} />
+            <GeoJSON 
+              data={parsedGeoJSON} 
+              style={polyStyle} 
+              eventHandlers={{
+                mouseover: (e) => {
+                  e.layer.setStyle(hoverStyle);
+                },
+                mouseout: (e) => {
+                  e.layer.setStyle(polyStyle);
+                }
+              }}
+            />
           )
         )}
       </MapContainer>

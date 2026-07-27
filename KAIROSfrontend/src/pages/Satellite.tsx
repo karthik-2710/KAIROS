@@ -61,14 +61,14 @@ export default function SatelliteAnalysis() {
   const health = getHealthStatus(satellite?.ndvi_mean)
 
   return (
-    <div className="space-y-6 text-slate-300">
+    <div className="space-y-6">
       
       {/* Page Header */}
-      <div className="flex flex-col justify-between space-y-3 sm:flex-row sm:items-center sm:space-y-0 border-b border-[#1e2e22]/50 pb-4">
+      <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-center md:space-y-0 border-b border-slate-200/50 dark:border-white/5 pb-4">
         <div>
-          <span className="text-[9px] font-bold text-[#2E7D32] uppercase tracking-wider">{t("GIS Radiometric Panel")}</span>
-          <h1 className="text-xl font-bold tracking-tight text-white mt-1 flex items-center">
-            <Satellite className="h-5 w-5 mr-2 text-[#2E7D32]" /> {t("Satellite Imagery Analytics")}
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("GIS Radiometric Panel")}</span>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mt-1 flex items-center">
+            <Satellite className="h-8 w-8 mr-3 text-primary dark:text-primary-300" /> {t("Satellite Imagery Analytics")}
           </h1>
         </div>
         <div className="flex items-center space-x-2">
@@ -91,7 +91,7 @@ export default function SatelliteAnalysis() {
       )}
       
       {!satellite && !isLoading && !error && (
-        <div className="bg-[#FFB300]/10 border border-[#FFB300]/30 rounded-xl p-4 flex items-start space-x-2 text-[#FFB300]">
+        <div className="bg-[#FFB300]/10 border border-[#FFB300]/30 rounded-xl p-4 flex items-start space-x-2 text-highlight dark:text-highlight-300">
           <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
           <span className="text-sm font-semibold">Unable to retrieve Sentinel analytics. Please refresh or try again later.</span>
         </div>
@@ -102,14 +102,14 @@ export default function SatelliteAnalysis() {
         
         {/* Large GIS Map component (2 cols) */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="border-[#1e2e22] bg-[#0A0E0C] overflow-hidden relative shadow-2xl h-full min-h-[400px]">
+          <Card className="border-slate-200/70 dark:border-white/10 shadow-premium rounded-[2rem] relative h-[500px] md:h-[600px] overflow-hidden">
             {/* GIS Top bar header info */}
-            <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-950/80 px-2.5 py-1 rounded border border-[#1e2e22] backdrop-blur flex items-center">
-                <Map className="h-3 w-3 mr-1 text-[#2E7D32]" /> 
+            <div className="absolute top-6 left-6 right-6 z-10 flex items-center justify-between pointer-events-none">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest glass dark:bg-dark-surface/90 px-4 py-2 rounded-2xl flex items-center shadow-lg">
+                <Map className="h-4 w-4 mr-2 text-accent" /> 
                 viewer_gis // {currentFarm?.name}
               </span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-950/80 px-2.5 py-1 rounded border border-[#1e2e22] backdrop-blur">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest glass dark:bg-dark-surface/90 px-4 py-2 rounded-2xl shadow-lg">
                 Mode: Observation
               </span>
             </div>
@@ -124,7 +124,7 @@ export default function SatelliteAnalysis() {
                    ndviColor={health.bg}
                  />
               ) : (
-                <div className="h-full w-full flex items-center justify-center bg-black/60 text-slate-500 text-sm">
+                <div className="h-full w-full flex items-center justify-center bg-black/60 text-slate-500 dark:text-slate-400 text-sm">
                   No spatial boundary defined for this farm.
                 </div>
               )}
@@ -134,58 +134,58 @@ export default function SatelliteAnalysis() {
 
         {/* Right Column: GIS Telemetry specs (1 col) */}
         <div className="space-y-6">
-          <Card className="border-[#1e2e22] bg-[#0A0E0C] h-full">
-            <CardHeader className="pb-3 border-b border-[#1e2e22]/50">
-              <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">
+          <Card className="h-full border-slate-200/70 dark:border-white/10 shadow-premium rounded-[2rem]">
+            <CardHeader className="pb-4 border-b border-slate-100 dark:border-white/5">
+              <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 {t("Satellite Specs & Metadata")}
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-4 space-y-4 text-xs">
-              <div className="space-y-1.5 border-b border-[#1e2e22]/40 pb-3">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Orbiter Platform</span>
-                <p className="font-bold text-slate-200">Sentinel-2A/B Constellation</p>
+            <CardContent className="pt-6 space-y-6 text-sm">
+              <div className="space-y-1.5 border-b border-slate-100 dark:border-white/5 pb-4">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Orbiter Platform</span>
+                <p className="font-bold text-slate-900 dark:text-slate-200 text-lg">Sentinel-2A/B Constellation</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 border-b border-[#1e2e22]/40 pb-3">
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Spatial Res.</span>
-                  <p className="font-semibold text-slate-300">10-meter/pixel</p>
+              <div className="grid grid-cols-2 gap-4 border-b border-slate-100 dark:border-white/5 pb-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Spatial Res.</span>
+                  <p className="font-bold text-slate-900 dark:text-slate-300">10-meter/pixel</p>
                 </div>
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Revisit Time</span>
-                  <p className="font-semibold text-slate-300">5 days</p>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Revisit Time</span>
+                  <p className="font-bold text-slate-900 dark:text-slate-300">5 days</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 border-b border-[#1e2e22]/40 pb-3">
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Acquisition Date</span>
-                  <p className="font-semibold text-[#FFB300]">
+              <div className="grid grid-cols-2 gap-4 border-b border-slate-100 dark:border-white/5 pb-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Acquisition Date</span>
+                  <p className="font-bold text-accent dark:text-accent-300">
                     {satellite?.timestamp ? new Date(satellite.timestamp).toLocaleDateString() : 'N/A'}
                   </p>
                 </div>
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Cloud Coverage</span>
-                  <p className="font-semibold text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cloud Coverage</span>
+                  <p className="font-bold text-slate-900 dark:text-slate-300">
                     {satellite?.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'}
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-1 border-b border-[#1e2e22]/40 pb-3">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Farm Area</span>
-                <p className="font-semibold text-slate-300">{currentFarm?.area_ha.toFixed(2)} Hectares</p>
+              <div className="space-y-1.5 border-b border-slate-100 dark:border-white/5 pb-4">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Farm Area</span>
+                <p className="font-bold text-slate-900 dark:text-slate-300 text-lg">{currentFarm?.area_ha.toFixed(2)} Hectares</p>
               </div>
 
               {/* Status checklist specs */}
-              <div className="rounded-xl border border-[#1e2e22]/70 bg-slate-950/40 p-3 text-[10px] text-slate-400 space-y-2 leading-relaxed">
-                <p className="font-bold text-[#2E7D32] flex items-center">
-                  <Zap className="h-3 w-3 mr-1 text-[#2E7D32]" /> Spectral Indices:
+              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-dark-elevated p-5 text-xs text-slate-500 dark:text-slate-400 space-y-3 leading-relaxed shadow-inner">
+                <p className="font-bold text-primary dark:text-primary-300 flex items-center">
+                  <Zap className="h-4 w-4 mr-1.5 text-accent" /> Spectral Indices:
                 </p>
-                <div className="space-y-1 font-semibold">
+                <div className="space-y-1.5 font-semibold">
                   <p>• Band 04 (Red): 665nm wavelength</p>
                   <p>• Band 08 (NIR): 842nm wavelength</p>
-                  <p className="text-[#FFB300] font-bold mt-1">Formula: (NIR - RED) / (NIR + RED)</p>
+                  <p className="text-highlight dark:text-highlight-300 font-bold mt-2">Formula: (NIR - RED) / (NIR + RED)</p>
                 </div>
               </div>
             </CardContent>
@@ -194,81 +194,81 @@ export default function SatelliteAnalysis() {
       </div>
 
       {/* ─── BOTTOM ROW: STATISTICS GRID ─────────────────────────────────────────── */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Mean NDVI */}
-        <Card className="border-[#1e2e22] bg-[#0A0E0C]">
-          <CardContent className="pt-5 space-y-1 text-center">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block flex items-center justify-center">
-              <Activity className="h-3 w-3 mr-0.5 text-blue-500" /> Mean NDVI Score
+        <Card className="border-slate-200/70 dark:border-white/10 shadow-sm rounded-[2rem]">
+          <CardContent className="p-6 space-y-3 text-center h-full flex flex-col justify-center">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block flex items-center justify-center">
+              <Activity className="h-4 w-4 mr-1 text-accent" /> Mean NDVI Score
             </span>
             {isLoading ? (
-              <div className="h-8 w-16 bg-slate-800 animate-pulse mx-auto rounded mt-2"></div>
+              <div className="h-10 w-24 bg-slate-100 dark:bg-white/5 animate-pulse mx-auto rounded-lg mt-4"></div>
             ) : (
-              <p className="text-2xl font-black text-white">{satellite?.ndvi_mean ?? 'N/A'}</p>
+              <p className="text-5xl font-black text-slate-900 dark:text-white my-4">{satellite?.ndvi_mean ?? 'N/A'}</p>
             )}
-            <Badge variant="outline" className="text-[8px] py-0">Vegetation Index</Badge>
+            <Badge variant="outline" className="text-[10px] font-bold border-slate-200 dark:border-white/10 text-slate-500 mx-auto w-fit">Vegetation Index</Badge>
           </CardContent>
         </Card>
 
         {/* Health Class */}
-        <Card className="border-[#1e2e22] bg-[#0A0E0C]">
-          <CardContent className="pt-5 space-y-1 text-center">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block flex items-center justify-center">
-              <TrendingUp className="h-3 w-3 mr-0.5 text-green-500" /> Health Status
+        <Card className="border-slate-200/70 dark:border-white/10 shadow-sm rounded-[2rem]">
+          <CardContent className="p-6 space-y-3 text-center h-full flex flex-col justify-center">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block flex items-center justify-center">
+              <TrendingUp className="h-4 w-4 mr-1 text-status-success" /> Health Status
             </span>
             {isLoading ? (
-              <div className="h-8 w-24 bg-slate-800 animate-pulse mx-auto rounded mt-2"></div>
+              <div className="h-10 w-32 bg-slate-100 dark:bg-white/5 animate-pulse mx-auto rounded-lg mt-4"></div>
             ) : (
               <>
-                <p className={`text-2xl font-black ${health.color}`}>
+                <p className={`text-4xl font-black my-4 ${health.color}`}>
                   {health.text}
                 </p>
-                <Badge variant="outline" className={`text-[8px] py-0 ${health.border}`}>Canopy Assessment</Badge>
+                <Badge variant="outline" className={`text-[10px] font-bold mx-auto w-fit ${health.border}`}>Canopy Assessment</Badge>
               </>
             )}
           </CardContent>
         </Card>
 
         {/* Min/Max Range */}
-        <Card className="border-[#1e2e22] bg-[#0A0E0C]">
-          <CardContent className="pt-5 space-y-1 text-center">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block flex items-center justify-center">
-              <Maximize className="h-3 w-3 mr-0.5 text-[#FFB300]" /> Variance (Min / Max)
+        <Card className="border-slate-200/70 dark:border-white/10 shadow-sm rounded-[2rem]">
+          <CardContent className="p-6 space-y-3 text-center h-full flex flex-col justify-center">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block flex items-center justify-center">
+              <Maximize className="h-4 w-4 mr-1 text-highlight dark:text-highlight-300" /> Variance (Min / Max)
             </span>
             {isLoading ? (
-              <div className="h-8 w-20 bg-slate-800 animate-pulse mx-auto rounded mt-2"></div>
+              <div className="h-10 w-24 bg-slate-100 dark:bg-white/5 animate-pulse mx-auto rounded-lg mt-4"></div>
             ) : (
-              <p className="text-2xl font-black text-white">
+              <p className="text-4xl font-black text-slate-900 dark:text-white my-4">
                 {satellite?.ndvi_min !== undefined && satellite?.ndvi_max !== undefined ? 
-                 `Min: ${satellite.ndvi_min} / Max: ${satellite.ndvi_max}` : 
+                 `${satellite.ndvi_min} / ${satellite.ndvi_max}` : 
                  'N/A'}
               </p>
             )}
-            <Badge variant="outline" className="text-[8px] py-0 border-[#FFB300]/40 text-[#FFB300]">Field Uniformity</Badge>
+            <Badge variant="outline" className="text-[10px] font-bold border-highlight/40 text-highlight dark:text-highlight-300 mx-auto w-fit">Field Uniformity</Badge>
           </CardContent>
         </Card>
 
         {/* Cloud Coverage */}
-        <Card className="border-[#1e2e22] bg-[#0A0E0C]">
-          <CardContent className="pt-5 space-y-1 text-center">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block flex items-center justify-center">
-              <Cloud className="h-3 w-3 mr-0.5 text-slate-400" /> Cloud Mask
+        <Card className="border-slate-200/70 dark:border-white/10 shadow-sm rounded-[2rem]">
+          <CardContent className="p-6 space-y-3 text-center h-full flex flex-col justify-center">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block flex items-center justify-center">
+              <Cloud className="h-4 w-4 mr-1 text-slate-400" /> Cloud Mask
             </span>
             {isLoading ? (
-              <div className="h-8 w-16 bg-slate-800 animate-pulse mx-auto rounded mt-2"></div>
+              <div className="h-10 w-24 bg-slate-100 dark:bg-white/5 animate-pulse mx-auto rounded-lg mt-4"></div>
             ) : (
-              <p className="text-2xl font-black text-slate-300">
+              <p className="text-5xl font-black text-slate-900 dark:text-white my-4">
                 {satellite?.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'}
               </p>
             )}
-            <Badge variant="outline" className="text-[8px] py-0">Atmospheric Condition</Badge>
+            <Badge variant="outline" className="text-[10px] font-bold border-slate-200 dark:border-white/10 text-slate-500 mx-auto w-fit">Atmospheric Condition</Badge>
           </CardContent>
         </Card>
       </div>
 
       {/* Warning info panel at the bottom */}
-      <div className="bg-[#EDF1EA]/5 border border-[#1e2e22] rounded-xl p-4 flex items-start space-x-2 text-xs text-slate-400 leading-relaxed">
-        <Info className="h-4.5 w-4.5 text-[#FFB300] shrink-0 mt-0.5" />
+      <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex items-start space-x-3 text-sm font-semibold text-slate-500 dark:text-slate-400 leading-relaxed shadow-inner">
+        <Info className="h-5 w-5 text-highlight dark:text-highlight-300 shrink-0 mt-0.5" />
         <span>
           Satellite analyses are generated from real Sentinel Hub EO data. The analytics shown reflect the most recent pass with optimal cloud cover limits. Historical imagery will become available as sequential satellite passes are captured and recorded over your active parcels.
         </span>

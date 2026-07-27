@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Bell, Sprout, ChevronDown, LogOut, User } from 'lucide-react'
+import { Menu, Bell, Sprout, ChevronDown, LogOut, User, Sun, Moon } from 'lucide-react'
 import { Farm } from '@/types'
 import { authAPI } from '@/services/api'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,10 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
   const [profileOpen, setProfileOpen] = React.useState(false)
   const [notificationsOpen, setNotificationsOpen] = React.useState(false)
+  const [isDark, setIsDark] = React.useState(
+    () => localStorage.getItem('kairos_dark_mode') === 'true' || 
+          (!('kairos_dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  )
   const { t, i18n } = useTranslation()
   
   const dropdownRef = React.useRef<HTMLDivElement>(null)
@@ -53,11 +57,18 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
     localStorage.setItem('kairos_language', newLang)
   }
 
+  const toggleTheme = () => {
+    const newDark = !isDark
+    setIsDark(newDark)
+    localStorage.setItem('kairos_dark_mode', String(newDark))
+    document.documentElement.classList.toggle('dark', newDark)
+  }
+
   // Generate warning/alerts based on farm scores
   const stressedFarms = farms.filter(f => f.health_score < 60)
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#DCE3D6]/70 bg-[#F7F9F5]/80 px-4 backdrop-blur-md md:px-6">
+    <header className="sticky top-0 z-30 flex h-20 w-full items-center justify-between bg-transparent px-6 md:px-8 pt-4">
       {/* Mobile Toggle & Brand/Selector */}
       <div className="flex items-center space-x-4">
         <button
@@ -72,15 +83,15 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center space-x-2 rounded-lg border border-[#DCE3D6]/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-[#EDF1EA]/30 transition"
+              className="flex items-center space-x-2 rounded-lg border border-slate-200/70 dark:border-white/10 bg-white dark:bg-dark-bg px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-50 dark:hover:bg-white/5 transition"
             >
-              <Sprout className="h-4 w-4 text-[#2E7D32]" />
+              <Sprout className="h-4 w-4 text-primary" />
               <span className="max-w-[120px] truncate">{selectedFarm?.name}</span>
               <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
             </button>
 
             {dropdownOpen && (
-              <div className="absolute left-0 mt-1.5 w-56 rounded-xl border border-[#DCE3D6] bg-white p-1 shadow-lg ring-1 ring-black/5 animate-fade-in">
+              <div className="absolute left-0 mt-1.5 w-56 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface p-1 shadow-lg ring-1 ring-black/5 animate-fade-in">
                 <div className="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                   {t("Select Active Farm")}
                 </div>
@@ -93,14 +104,14 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
                     }}
                     className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs font-medium transition ${
                       selectedFarmId === farm.id
-                        ? 'bg-[#E8F5E9] text-[#1B5E20]'
-                        : 'text-slate-600 hover:bg-[#EDF1EA]/50 hover:text-slate-900'
+                        ? 'bg-primary-50 text-primary-800 dark:bg-primary-900/40 dark:text-primary-300'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200'
                     }`}
                   >
                     <span>{farm.name}</span>
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                      farm.health_score >= 80 ? 'bg-green-100 text-green-800' :
-                      farm.health_score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                      farm.health_score >= 80 ? 'bg-status-success/20 text-status-success' :
+                      farm.health_score >= 60 ? 'bg-status-warning/20 text-status-warning' : 'bg-status-critical/20 text-status-critical'
                     }`}>
                       {farm.health_score}%
                     </span>
@@ -113,11 +124,19 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
       </div>
 
       {/* Notifications & Profile */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center justify-center h-8 w-8 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-bg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition shadow-sm"
+        >
+          {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        </button>
+
         {/* Language Toggle */}
         <button
           onClick={toggleLanguage}
-          className="flex items-center justify-center h-7 w-12 rounded-full border border-[#DCE3D6] bg-white text-xs font-bold text-[#2E7D32] hover:bg-[#EDF1EA]/50 transition shadow-sm"
+          className="flex items-center justify-center h-8 w-12 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-bg text-xs font-bold text-primary dark:text-primary-300 hover:bg-slate-50 dark:hover:bg-white/5 transition shadow-sm"
         >
           {i18n.language === 'ta' ? 'தமிழ்' : 'EN'}
         </button>
@@ -126,19 +145,19 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
         <div className="relative" ref={notificationsRef}>
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="relative rounded-lg p-1.5 text-slate-500 hover:bg-[#EDF1EA] hover:text-slate-800 transition"
+            className="relative rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-slate-200 transition"
           >
             <Bell className="h-5 w-5" />
             {stressedFarms.length > 0 && (
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#F7F9F5]" />
+              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-status-critical ring-2 ring-white dark:ring-dark-surface" />
             )}
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 origin-top-right rounded-xl border border-[#DCE3D6] bg-white p-1.5 shadow-lg ring-1 ring-black/5 animate-fade-in">
-              <div className="px-3 py-2 border-b border-[#EDF1EA]/50 text-xs font-bold text-slate-900 flex justify-between">
+            <div className="absolute right-0 mt-2 w-80 origin-top-right rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface p-1.5 shadow-lg ring-1 ring-black/5 animate-fade-in">
+              <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5 text-xs font-bold text-slate-900 dark:text-white flex justify-between">
                 <span>{t("Alerts & Notifications")}</span>
-                <span className="text-[10px] text-[#2E7D32]">{stressedFarms.length} {t("Active")}</span>
+                <span className="text-[10px] text-primary dark:text-primary-400">{stressedFarms.length} {t("Active")}</span>
               </div>
               <div className="max-h-60 overflow-y-auto py-1">
                 {stressedFarms.length > 0 ? (
@@ -164,28 +183,28 @@ export function Navbar({ farms, selectedFarmId, onFarmChange, onToggleSidebar }:
         <div className="relative" ref={profileRef}>
           <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center justify-center h-8 w-8 rounded-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white text-xs font-bold border border-[#DCE3D6]/70 shadow-sm transition"
+            className="flex items-center justify-center h-8 w-8 rounded-full bg-primary hover:bg-primary-900 text-white text-xs font-bold shadow-sm transition"
           >
             DF
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-52 origin-top-right rounded-xl border border-[#DCE3D6] bg-white p-1 shadow-lg ring-1 ring-black/5 animate-fade-in">
-              <div className="px-3 py-2 text-xs border-b border-[#EDF1EA]/50 text-slate-500">
-                <p className="font-semibold text-slate-800">Demo Farmer</p>
-                <p className="text-[10px] truncate text-slate-400">demo@kairos.ag</p>
+            <div className="absolute right-0 mt-2 w-52 origin-top-right rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface p-1 shadow-lg ring-1 ring-black/5 animate-fade-in">
+              <div className="px-3 py-2 text-xs border-b border-slate-100 dark:border-white/5 text-slate-500 dark:text-slate-400">
+                <p className="font-semibold text-slate-800 dark:text-slate-200">Demo Farmer</p>
+                <p className="text-[10px] truncate">demo@kairos.ag</p>
               </div>
               <div className="py-1">
                 <button
                   onClick={() => { setProfileOpen(false); navigate('/app/farms') }}
-                  className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-600 hover:bg-[#EDF1EA]/50 hover:text-slate-900"
+                  className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
                 >
                   <User className="h-4 w-4" />
                   <span>{t("My Profile")}</span>
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50"
+                  className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-status-critical hover:bg-status-critical/10"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>{t("Log Out")}</span>

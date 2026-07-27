@@ -160,7 +160,7 @@ export default function History() {
   const getEventIcon = (type: string) => {
     switch (type) {
       case 'disease':
-        return <Camera className="h-4.5 w-4.5 text-[#FFB300]" />
+        return <Camera className="h-4.5 w-4.5 text-highlight dark:text-highlight-300" />
       case 'weather':
         return <CloudSun className="h-4.5 w-4.5 text-blue-500" />
       case 'sensor':
@@ -168,9 +168,9 @@ export default function History() {
       case 'rec':
         return <Layers className="h-4.5 w-4.5 text-purple-500" />
       case 'treatment':
-        return <CheckCircle2 className="h-4.5 w-4.5 text-[#2E7D32]" />
+        return <CheckCircle2 className="h-4.5 w-4.5 text-primary dark:text-primary-300" />
       default:
-        return <HelpCircle className="h-4.5 w-4.5 text-slate-500" />
+        return <HelpCircle className="h-4.5 w-4.5 text-slate-500 dark:text-slate-400" />
     }
   }
 
@@ -200,25 +200,25 @@ export default function History() {
     <div className="space-y-6">
       
       {/* Page Header */}
-      <div>
-        <h1 className="text-xl font-bold tracking-tight text-slate-900">Analysis & Event History</h1>
-        <p className="text-xs text-slate-500">
+      <div className="pb-4">
+        <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">Analysis & Event History</h1>
+        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-2">
           Chronological historical logs of crop diagnoses, weather indicators, sensor alerts, and treatment applications.
         </p>
       </div>
 
       {/* ─── CHARTS SUMMARIZING EVENT HISTORY ────────────────────────────────────── */}
-      <Card>
-        <CardContent className="p-5">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Historical Events Distribution</span>
-          <div className="h-48 w-full">
+      <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+        <CardContent className="p-8">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Historical Events Distribution</span>
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ left: -30, right: 10, top: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#EDF1EA" vertical={false} />
-                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={10} tickLine={false} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: '#ffffff', borderColor: '#DCE3D6', fontSize: 11 }} />
-                <Bar dataKey="count" fill="#2E7D32" radius={[4, 4, 0, 0]} maxBarSize={30}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} opacity={0.5} />
+                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                <Tooltip cursor={{ fill: '#f8fafc', opacity: 0.5 }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                <Bar dataKey="count" fill="#2E7D32" radius={[8, 8, 0, 0]} maxBarSize={40}>
                   {chartData.map((entry, idx) => (
                     <Cell key={`cell-${idx}`} fill={entry.color} />
                   ))}
@@ -230,7 +230,7 @@ export default function History() {
       </Card>
 
       {/* ─── DYNAMIC FILTERING & SEARCH BAR ─────────────────────────────────────── */}
-      <Card className="bg-[#EDF1EA]/10 border-[#DCE3D6]/70">
+      <Card className="bg-slate-50 dark:bg-dark-elevated border-slate-200/70 dark:border-white/5 rounded-[2rem] shadow-sm">
         <CardContent className="p-4 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
             
@@ -247,7 +247,7 @@ export default function History() {
             </div>
 
             {/* Filter Toggle headers */}
-            <div className="flex items-center space-x-2 shrink-0 text-slate-500 font-bold text-xs">
+            <div className="flex items-center space-x-2 shrink-0 text-slate-500 dark:text-slate-400 font-bold text-xs">
               <SlidersHorizontal className="h-4.5 w-4.5" />
               <span>Filters</span>
             </div>
@@ -261,7 +261,7 @@ export default function History() {
               <select
                 value={selectedCrop}
                 onChange={(e) => setSelectedCrop(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
               >
                 <option value="All">All Crops</option>
                 <option value="Rice">Rice</option>
@@ -278,7 +278,7 @@ export default function History() {
               <select
                 value={selectedSeverity}
                 onChange={(e) => setSelectedSeverity(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
               >
                 <option value="All">All Severities</option>
                 <option value="Low">Low</option>
@@ -293,7 +293,7 @@ export default function History() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
               >
                 <option value="All">All Statuses</option>
                 <option value="Pending">Pending</option>
@@ -307,7 +307,7 @@ export default function History() {
               <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Date Interval</span>
               <select
                 disabled
-                className="flex h-9.5 w-full rounded-lg border border-[#DCE3D6] bg-slate-50 px-3 py-1.5 text-xs text-slate-400 focus:outline-none"
+                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-400 focus:outline-none"
               >
                 <option value="All">All Time Logs</option>
               </select>
@@ -317,24 +317,24 @@ export default function History() {
       </Card>
 
       {/* ─── TIMELINE SECTION ────────────────────────────────────────────────────── */}
-      <div className="relative border-l-2 border-[#EDF1EA] pl-6 ml-4 space-y-6 pt-2">
+      <div className="relative border-l-2 border-slate-100 dark:border-white/5 pl-6 ml-4 space-y-6 pt-2">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
             <div key={event.id} className="relative group">
               
               {/* Timeline Pin Dot */}
-              <div className="absolute -left-[32.5px] top-1 bg-white h-5 w-5 rounded-full border-2 border-[#EDF1EA] group-hover:border-[#2E7D32] flex items-center justify-center transition shadow-sm">
+              <div className="absolute -left-[32.5px] top-1 bg-white dark:bg-dark-surface h-5 w-5 rounded-full border-2 border-slate-100 dark:border-white/5 group-hover:border-[#2E7D32] flex items-center justify-center transition shadow-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-slate-400 group-hover:bg-[#2E7D32]" />
               </div>
 
               {/* Timeline Event Card */}
-              <Card className="hover:border-[#DCE3D6] transition-all bg-white shadow-sm">
+              <Card className="hover:border-slate-200 dark:border-white/10 transition-all bg-white dark:bg-dark-surface shadow-sm">
                 <CardContent className="p-4 space-y-3">
                   
                   {/* Card Header: Type, Crop Badge, Date */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#EDF1EA]/50 pb-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-white/5/50 pb-2">
                     <div className="flex items-center space-x-2">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDF1EA]/30 border border-[#DCE3D6]/20">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5/30 border border-slate-200 dark:border-white/10/20">
                         {getEventIcon(event.type)}
                       </div>
                       <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
@@ -347,19 +347,19 @@ export default function History() {
                         <Calendar className="h-3 w-3 mr-1" /> {event.date}
                       </span>
                       <Badge variant="secondary" className="text-[9px] py-0 font-bold uppercase tracking-wide">
-                        <Sprout className="h-3 w-3 mr-1 text-[#2E7D32]" /> {event.crop}
+                        <Sprout className="h-3 w-3 mr-1 text-primary dark:text-primary-300" /> {event.crop}
                       </Badge>
                     </div>
                   </div>
 
                   {/* Card Body: Title & Description */}
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-slate-900">{event.title}</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">{event.desc}</p>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{event.title}</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{event.desc}</p>
                   </div>
 
                   {/* Card Footer: Severity, Status & Action Info */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#EDF1EA]/40 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-white/5/40 text-xs">
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center space-x-1">
                         <span className="text-[9px] text-slate-400 font-semibold uppercase">Severity:</span>
@@ -372,7 +372,7 @@ export default function History() {
                     </div>
 
                     {event.actionLabel && (
-                      <span className="text-[10px] font-bold text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#2e7d32]/10">
+                      <span className="text-[10px] font-bold text-primary dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded border border-[#2e7d32]/10">
                         {event.actionLabel}
                       </span>
                     )}

@@ -162,33 +162,33 @@ export default function IoTMonitoring() {
     <div className="space-y-6">
       
       {/* Page Header */}
-      <div className="flex flex-col justify-between space-y-3 sm:flex-row sm:items-center sm:space-y-0">
+      <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-center md:space-y-0 pb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">{t("IoT Telemetry Grid")}</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">{t("IoT Telemetry Grid")}</h1>
+          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-2">
             {t("Live telemetry feed from node grids registered at")} {currentFarm?.name}.
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <div className="flex items-center space-x-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-4 py-2 rounded-xl shadow-inner">
+          <span className="h-2 w-2 rounded-full bg-status-success shadow-[0_0_8px_rgba(63,174,90,0.8)] animate-pulse" />
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
             {t("Telemetry Feed Active")}
           </span>
         </div>
       </div>
 
       {/* ─── SENSORS 10 CARDS GRID ───────────────────────────────────────────────── */}
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {Object.values(sensors).map((s) => {
           const Icon = s.icon
           return (
-            <Card key={s.id} className="hover:border-[#DCE3D6] transition-all">
+            <Card key={s.id} className="hover:border-slate-300 dark:hover:border-white/20 transition-all rounded-[2rem] shadow-sm border-slate-200/70 dark:border-white/10">
               <CardContent className="p-4 space-y-3 flex flex-col justify-between h-full">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{s.name}</span>
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDF1EA]/50 text-slate-600 border border-[#DCE3D6]/35">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{s.name}</span>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-dark-elevated text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 shadow-sm">
                     <Icon className="h-4 w-4" style={{ color: s.color }} />
                   </div>
                 </div>
@@ -197,7 +197,7 @@ export default function IoTMonitoring() {
                 <div className="flex items-end justify-between pt-1">
                   <div>
                     {/* Tick animated number representation */}
-                    <p className="text-xl font-extrabold text-slate-900 leading-none tracking-tight">
+                    <p className="text-xl font-extrabold text-slate-900 dark:text-white leading-none tracking-tight">
                       {s.value}
                       <span className="text-xs font-semibold text-slate-400 ml-0.5">{s.unit}</span>
                     </p>
@@ -212,7 +212,7 @@ export default function IoTMonitoring() {
                 </div>
 
                 {/* Last updated footer */}
-                <div className="text-[8px] text-slate-400 border-t border-[#EDF1EA]/50 pt-2 flex items-center justify-between">
+                <div className="text-[8px] text-slate-400 border-t border-slate-100 dark:border-white/5/50 pt-2 flex items-center justify-between">
                   <span>Sensor ID: IoT_{s.id.toUpperCase()}</span>
                   <span>Just now</span>
                 </div>
@@ -227,15 +227,15 @@ export default function IoTMonitoring() {
         
         {/* Left Column: Offline nodes & Location Map */}
         <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader className="pb-3 border-b border-[#EDF1EA]/50">
-              <CardTitle>{t("Hardware Node Spatial Map")}</CardTitle>
-              <CardDescription>{t("Geometric coordinates layout mapping registered nodes across the coordinates perimeter.")}</CardDescription>
+          <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+            <CardHeader className="p-8 pb-4 border-b border-slate-100 dark:border-white/5">
+              <CardTitle className="text-xl font-black">{t("Hardware Node Spatial Map")}</CardTitle>
+              <CardDescription className="text-sm font-medium mt-1">{t("Geometric coordinates layout mapping registered nodes across the coordinates perimeter.")}</CardDescription>
             </CardHeader>
-            <CardContent className="pt-6 grid gap-6 md:grid-cols-5 items-center">
+            <CardContent className="p-8 grid gap-6 md:grid-cols-5 items-center">
               
               {/* SVG Map (3 cols) */}
-              <div className="md:col-span-3 h-44 rounded-xl border border-[#DCE3D6]/70 bg-gradient-to-br from-[#F7F9F5] to-white relative overflow-hidden flex items-center justify-center shadow-inner">
+              <div className="md:col-span-3 h-44 rounded-xl border border-slate-200 dark:border-white/10/70 bg-gradient-to-br from-[#F7F9F5] to-white relative overflow-hidden flex items-center justify-center shadow-inner">
                 {/* Field schema grid backdrop */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-40" />
                 
@@ -282,10 +282,10 @@ export default function IoTMonitoring() {
 
               {/* Status List side panel (2 cols) */}
               <div className="md:col-span-2 space-y-4 text-xs">
-                <div className="space-y-1 border-b border-[#EDF1EA]/60 pb-2">
+                <div className="space-y-1 border-b border-slate-100 dark:border-white/5/60 pb-2">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Telemetry Health</span>
-                  <p className="font-bold text-slate-800 flex items-center">
-                    <CheckCircle2 className="h-4 w-4 mr-1 text-[#2E7D32]" /> 3/4 Nodes Online
+                  <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center">
+                    <CheckCircle2 className="h-4 w-4 mr-1 text-primary dark:text-primary-300" /> 3/4 Nodes Online
                   </p>
                 </div>
 
@@ -295,7 +295,7 @@ export default function IoTMonitoring() {
                     <p className="font-bold flex items-center">
                       <Lock className="h-3 w-3 mr-1" /> Node #04 (West boundary)
                     </p>
-                    <p className="text-slate-500 leading-normal">Offline 4.2h: Voltage dropped below critical threshold (3.1V).</p>
+                    <p className="text-slate-500 dark:text-slate-400 leading-normal">Offline 4.2h: Voltage dropped below critical threshold (3.1V).</p>
                   </div>
                 </div>
               </div>
@@ -308,7 +308,7 @@ export default function IoTMonitoring() {
           
           {/* active alerts widget */}
           <Card>
-            <CardHeader className="pb-3 border-b border-[#EDF1EA]/50 flex flex-row items-center justify-between">
+            <CardHeader className="pb-3 border-b border-slate-100 dark:border-white/5/50 flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Active Node Alarms</CardTitle>
                 <CardDescription>Telemetry values crossing baseline indices.</CardDescription>
@@ -323,8 +323,8 @@ export default function IoTMonitoring() {
                   <div key={idx} className="flex items-start space-x-3 text-xs bg-amber-50/50 border border-amber-100 p-2.5 rounded-lg">
                     <AlertTriangle className="h-4.5 w-4.5 text-amber-500 shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold text-slate-900">{w.name} Threshold Breach</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5 leading-normal">
+                      <p className="font-bold text-slate-900 dark:text-white">{w.name} Threshold Breach</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-normal">
                         Current level is {w.value} {w.unit} ({w.status}). Target limits violated.
                       </p>
                     </div>
@@ -340,20 +340,20 @@ export default function IoTMonitoring() {
 
           {/* live logs table */}
           <Card>
-            <CardHeader className="pb-3 border-b border-[#EDF1EA]/50 flex flex-row items-center justify-between">
+            <CardHeader className="pb-3 border-b border-slate-100 dark:border-white/5/50 flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Live Packet Feed</CardTitle>
                 <CardDescription>Transmissions from distributed nodes.</CardDescription>
               </div>
-              <Radio className="h-4 w-4 text-[#2E7D32] animate-pulse" />
+              <Radio className="h-4 w-4 text-primary dark:text-primary-300 animate-pulse" />
             </CardHeader>
             <CardContent className="pt-4 max-h-48 overflow-y-auto pr-1">
               <div className="space-y-3 text-[10px]">
                 {logs.map((log, idx) => (
-                  <div key={idx} className="flex items-start space-x-2 justify-between border-b border-[#EDF1EA]/40 pb-2 last:border-b-0 last:pb-0">
+                  <div key={idx} className="flex items-start space-x-2 justify-between border-b border-slate-100 dark:border-white/5/40 pb-2 last:border-b-0 last:pb-0">
                     <span className="font-mono text-slate-400 shrink-0">{log.time}</span>
-                    <span className="font-bold text-[#2E7D32] shrink-0">{log.nodeId}</span>
-                    <span className="text-slate-600 text-left flex-1 pl-3 truncate">{log.event}</span>
+                    <span className="font-bold text-primary dark:text-primary-300 shrink-0">{log.nodeId}</span>
+                    <span className="text-slate-600 dark:text-slate-400 text-left flex-1 pl-3 truncate">{log.event}</span>
                     <Badge variant={log.status === 'crit' ? 'destructive' : log.status === 'warn' ? 'warning' : 'secondary'} className="py-0 px-1 text-[8px]">
                       {log.status}
                     </Badge>

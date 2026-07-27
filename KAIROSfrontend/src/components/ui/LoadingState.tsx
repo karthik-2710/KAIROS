@@ -2,11 +2,11 @@ import { Loader2 } from 'lucide-react'
 
 export function LoadingState() {
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-[#F7F9F5] dark:bg-[#090e0c] transition-colors duration-300">
+    <div className="flex h-screen w-full items-center justify-center bg-background dark:bg-dark-bg dark:bg-[#090e0c] transition-colors duration-300">
       <div className="flex flex-col items-center space-y-4">
         {/* Glow loader */}
         <div className="relative flex items-center justify-center">
-          <Loader2 className="h-10 w-10 animate-spin text-[#2E7D32]" />
+          <Loader2 className="h-10 w-10 animate-spin text-primary dark:text-primary-300" />
           <div className="absolute h-10 w-10 rounded-full border border-green-200 dark:border-green-900/30 animate-pulse pointer-events-none" />
         </div>
         <div className="space-y-1 text-center">

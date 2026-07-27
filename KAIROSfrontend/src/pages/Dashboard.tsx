@@ -14,22 +14,19 @@ import {
   XAxis, 
   YAxis, 
   Tooltip, 
-  CartesianGrid,
-  PieChart, 
-  Pie, 
-  Cell
+  CartesianGrid
 } from 'recharts'
 import { 
   Thermometer, 
   Droplets, 
-  CloudRain, 
   Brain, 
-  Satellite, 
   AlertTriangle, 
   Activity,
   TrendingUp,
   Calendar as CalendarIcon,
-  Cloud as CloudIcon
+  Cloud as CloudIcon,
+  Map as MapIcon,
+  Zap
 } from 'lucide-react'
 import { FarmMap } from '@/components/ui/FarmMap'
 import { getHealthStatus } from '@/utils/health'
@@ -98,15 +95,15 @@ export default function Dashboard() {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-lg border border-[#DCE3D6] bg-white p-3 shadow-md text-xs space-y-1.5">
-          <p className="font-semibold text-slate-800">{payload[0].payload.date} ({payload[0].payload.time})</p>
-          <div className="flex items-center space-x-2 text-[#2E7D32]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#2E7D32]" />
-            <span>Soil Moisture: {payload[0].value}%</span>
+        <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface p-4 shadow-xl text-xs space-y-2">
+          <p className="font-bold text-slate-800 dark:text-slate-200">{payload[0].payload.date} <span className="text-slate-400">({payload[0].payload.time})</span></p>
+          <div className="flex items-center space-x-2 text-accent dark:text-accent-300">
+            <span className="h-2 w-2 rounded-full bg-accent" />
+            <span className="font-semibold">Moisture: {payload[0].value}%</span>
           </div>
-          <div className="flex items-center space-x-2 text-[#FFB300]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FFB300]" />
-            <span>Temperature: {payload[1].value}°C</span>
+          <div className="flex items-center space-x-2 text-highlight dark:text-highlight-300">
+            <span className="h-2 w-2 rounded-full bg-highlight" />
+            <span className="font-semibold">Temperature: {payload[1].value}°C</span>
           </div>
         </div>
       )
@@ -117,19 +114,11 @@ export default function Dashboard() {
   // Loading skeleton layout
   if (dashLoading || historyLoading || !dashData) {
     return (
-      <div className="space-y-6">
-        <div className="flex flex-col space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-72" />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-xl" />
-          ))}
-        </div>
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Skeleton className="h-96 rounded-xl lg:col-span-2" />
-          <Skeleton className="h-96 rounded-xl" />
+      <div className="space-y-6 animate-pulse">
+        <Skeleton className="h-12 w-64 rounded-xl" />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <Skeleton className="h-[600px] xl:col-span-2 rounded-3xl" />
+          <Skeleton className="h-[600px] rounded-3xl" />
         </div>
       </div>
     )
@@ -141,326 +130,265 @@ export default function Dashboard() {
   const recommendation = dashData?.recommendation || {}
   const stats = dashData?.stats || { alerts: 0, diseases_detected: 0, total_farms: 0, last_analysis: null }
 
-  // NDVI Pie chart data
-  const ndviPieData = [
-    { name: 'Healthy', value: satellite.healthy_pct || 0, color: '#2E7D32' },
-    { name: 'Moderate', value: satellite.moderate_pct || 0, color: '#FFB300' },
-    { name: 'Stress', value: satellite.stress_pct || 0, color: '#ef4444' }
-  ]
 
   const healthScore = recommendation.health_score || currentFarm?.health_score || 0
 
   return (
-    <div className="space-y-6">
-      {/* Dashboard Page Header */}
-      <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-y-0">
+    <div className="space-y-8 pb-12">
+      {/* Enterprise Header */}
+      <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-center md:space-y-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">
-            {currentFarm?.name} {t("Analytics")}
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white flex items-center">
+            {currentFarm?.name} <span className="ml-3 text-2xl font-semibold text-slate-400">/ {t("Command Center")}</span>
           </h1>
-          <p className="text-xs text-slate-500">
-            {t("Registered crop")}: <strong className="text-slate-800">{currentFarm?.crop_type}</strong> • {t("Area")}: {currentFarm?.area_ha} ha
-          </p>
+          <div className="flex items-center space-x-4 mt-2">
+            <Badge variant="outline" className="border-slate-300 dark:border-white/20 text-slate-600 dark:text-slate-300 rounded-lg">
+              {t("Crop")}: {currentFarm?.crop_type}
+            </Badge>
+            <Badge variant="outline" className="border-slate-300 dark:border-white/20 text-slate-600 dark:text-slate-300 rounded-lg">
+              {t("Area")}: {currentFarm?.area_ha} ha
+            </Badge>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center">
+              <Zap className="h-3 w-3 mr-1 text-accent" />
+              {t("Live Telemetry")}: {sensor.timestamp ? new Date(sensor.timestamp).toLocaleTimeString() : t('offline')}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2.5">
-          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-            {t("Last Telemetry check")}: {sensor.timestamp ? new Date(sensor.timestamp).toLocaleTimeString() : t('offline')}
-          </span>
-          <Button onClick={handleSync} variant="outline" size="sm" disabled={isSyncing}>
-            {isSyncing ? t("Syncing...") : t("Sync Assets")}
+        <div className="flex items-center space-x-3">
+          <Button onClick={handleSync} className="bg-primary hover:bg-primary-600 text-white shadow-premium rounded-xl px-6 py-5" disabled={isSyncing}>
+            {isSyncing ? t("Syncing...") : t("Sync Satellite & IoT")}
           </Button>
         </div>
       </div>
       
-      {/* Farm Map Overview */}
-      <Card className="overflow-hidden border-[#DCE3D6]">
-        <div className="grid md:grid-cols-3">
-          <div className="md:col-span-2 p-0 bg-slate-100">
-             <FarmMap mode="view" polygon={currentFarm?.polygon as string | undefined} ndviColor={
-                (satellite.ndvi_mean || 0) >= 0.8 ? '#1B5E20' : 
-                (satellite.ndvi_mean || 0) >= 0.6 ? '#2E7D32' : 
-                (satellite.ndvi_mean || 0) >= 0.4 ? '#FBC02D' : 
-                (satellite.ndvi_mean || 0) >= 0.2 ? '#F57C00' : '#d32f2f'
-             } height="300px" />
-          </div>
-          <div className="p-6 flex flex-col justify-center space-y-4 bg-white border-l border-[#DCE3D6]/50">
+      {/* Top Asymmetric Layout: GIS Map (Left 2/3) + Hero Stats (Right 1/3) */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* Main GIS Map Panel */}
+        <Card className="xl:col-span-2 overflow-hidden border-slate-200/70 dark:border-white/10 shadow-premium rounded-[2rem] relative h-[500px] md:h-[600px] flex flex-col">
+          <div className="absolute top-6 left-6 z-10 glass dark:bg-dark-surface/90 px-5 py-3 rounded-2xl flex items-center space-x-3 shadow-lg">
+            <MapIcon className="h-5 w-5 text-accent" />
             <div>
-              <h3 className="text-lg font-bold text-slate-900 flex items-center">
-                <Satellite className="h-4 w-4 mr-2 text-slate-500" /> {t("Sentinel-2 Analysis")}
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">{t("Latest cloud-free statistical extraction")}</p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Mean NDVI")}</span>
-                <div className="flex items-baseline space-x-2 mt-1">
-                  <span className="text-2xl font-black text-slate-900">{satellite.ndvi_mean !== undefined ? satellite.ndvi_mean : 'N/A'}</span>
-                </div>
-              </div>
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Health")}</span>
-                <div className="mt-1">
-                  <Badge style={{
-                    backgroundColor: getHealthStatus(satellite.ndvi_mean).bg,
-                    color: 'white'
-                  }}>
-                    {getHealthStatus(satellite.ndvi_mean).text}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            
-            <div className="pt-3 border-t border-[#EDF1EA]/70 flex justify-between items-center text-xs text-slate-600">
-               <div className="flex items-center"><CalendarIcon className="h-3.5 w-3.5 mr-1 text-slate-400"/> {satellite.timestamp ? new Date(satellite.timestamp).toLocaleDateString() : 'N/A'}</div>
-               <div className="flex items-center"><CloudIcon className="h-3.5 w-3.5 mr-1 text-slate-400"/> {satellite.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'} {t("Clouds")}</div>
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t("GIS Layer")}</p>
+              <p className="text-sm font-black text-slate-900 dark:text-white">{t("Sentinel-2 NDVI Overlay")}</p>
             </div>
           </div>
+
+          <div className="flex-1 w-full bg-slate-50 dark:bg-dark-bg relative">
+             <FarmMap mode="view" polygon={currentFarm?.polygon as string | undefined} ndviColor={
+                (satellite.ndvi_mean || 0) >= 0.8 ? '#3FAE5A' : 
+                (satellite.ndvi_mean || 0) >= 0.6 ? '#153B35' : 
+                (satellite.ndvi_mean || 0) >= 0.4 ? '#C48A2A' : 
+                (satellite.ndvi_mean || 0) >= 0.2 ? '#D88A1F' : '#B9382A'
+             } height="100%" />
+          </div>
+
+          {/* Map Footer Metrics */}
+          <div className="bg-white dark:bg-dark-surface p-6 border-t border-slate-200/50 dark:border-white/5 flex flex-wrap justify-between items-center gap-4 z-10">
+            <div className="flex items-center space-x-6">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Mean NDVI")}</p>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-0.5">{satellite.ndvi_mean !== undefined ? satellite.ndvi_mean : 'N/A'}</p>
+              </div>
+              <div className="w-px h-10 bg-slate-200 dark:bg-white/10" />
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Latest Capture")}</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white mt-1 flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-1.5 text-slate-400" />
+                  {satellite.timestamp ? new Date(satellite.timestamp).toLocaleDateString() : 'N/A'}
+                </p>
+              </div>
+              <div className="w-px h-10 bg-slate-200 dark:bg-white/10" />
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Cloud Cover")}</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white mt-1 flex items-center">
+                  <CloudIcon className="h-4 w-4 mr-1.5 text-slate-400" />
+                  {satellite.cloud_coverage !== undefined ? `${satellite.cloud_coverage}%` : 'N/A'}
+                </p>
+              </div>
+            </div>
+            <Badge className="px-3 py-1.5 text-xs font-bold shadow-sm" style={{ backgroundColor: getHealthStatus(satellite.ndvi_mean).bg, color: 'white' }}>
+              {getHealthStatus(satellite.ndvi_mean).text}
+            </Badge>
+          </div>
+        </Card>
+
+        {/* Hero Intelligence Stack (Right Col) */}
+        <div className="flex flex-col space-y-6">
+          
+          {/* Main Health Metric */}
+          <Card className={`relative overflow-hidden shadow-premium rounded-[2rem] border-0 text-white ${healthScore >= 75 ? 'bg-primary' : healthScore >= 60 ? 'bg-status-warning' : 'bg-status-critical'}`}>
+            {/* Ambient Background Glow */}
+            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white opacity-10 blur-2xl pointer-events-none" />
+            <CardContent className="p-8 h-full flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-widest text-white/80">{t("System Health Index")}</span>
+                <Activity className="h-6 w-6 text-white" />
+              </div>
+              <div className="mt-8 mb-4">
+                <span className="text-8xl font-black tracking-tighter block leading-none">{healthScore}<span className="text-4xl text-white/70">%</span></span>
+              </div>
+              <div>
+                <div className="inline-flex items-center bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-bold shadow-sm">
+                  {healthScore >= 75 ? t('Optimal Baseline') : healthScore >= 60 ? t('Elevated Risk Detected') : t('Critical Intervention Required')}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Active Alerts */}
+          <Card className={`shadow-premium rounded-[2rem] flex-1 flex flex-col justify-center border-slate-200/70 dark:border-white/10 ${stats.alerts > 0 ? 'bg-status-critical/10 border-status-critical/30' : 'bg-white dark:bg-dark-surface'}`}>
+            <CardContent className="p-8 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">{t("Active Threats")}</span>
+                <AlertTriangle className={`h-6 w-6 ${stats.alerts > 0 ? 'text-status-critical animate-pulse' : 'text-slate-300 dark:text-slate-600'}`} />
+              </div>
+              <div className="mt-auto">
+                <span className={`text-7xl font-black tracking-tighter ${stats.alerts > 0 ? 'text-status-critical' : 'text-slate-900 dark:text-white'}`}>{stats.alerts}</span>
+              </div>
+              <p className="mt-4 text-sm font-semibold text-slate-500 dark:text-slate-400 leading-relaxed">
+                {stats.alerts > 0 ? t('Priority alerts require immediate agronomic review.') : t('All monitored parameters are within safe operational thresholds.')}
+              </p>
+            </CardContent>
+          </Card>
+
         </div>
-      </Card>
-
-      {/* Grid Stats Row */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Farm Health Index */}
-        <Card className="hover:border-[#DCE3D6] transition-all">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">{t("Farm Health Score")}</span>
-              <Activity className={`h-4 w-4 ${healthScore >= 75 ? 'text-green-600' : healthScore >= 60 ? 'text-amber-500' : 'text-red-500'}`} />
-            </div>
-            <div className="mt-2.5 flex items-baseline space-x-2">
-              <span className="text-2xl font-bold text-slate-900">{healthScore}%</span>
-              <Badge variant={healthScore >= 75 ? 'success' : healthScore >= 60 ? 'warning' : 'destructive'}>
-                {healthScore >= 75 ? t('Optimal') : healthScore >= 60 ? t('Unstable') : t('Critical')}
-              </Badge>
-            </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">{t("Composite index of sat + IoT feeds")}</p>
-          </CardContent>
-        </Card>
-
-        {/* IoT Moisture */}
-        <Card className="hover:border-[#DCE3D6] transition-all">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">{t("Soil Moisture")}</span>
-              <Droplets className="h-4 w-4 text-blue-500" />
-            </div>
-            <div className="mt-2.5 flex items-baseline space-x-2">
-              <span className="text-2xl font-bold text-slate-900">{sensor.soil_moisture !== undefined ? `${sensor.soil_moisture}%` : 'N/A'}</span>
-              <span className="text-[10px] text-slate-500 flex items-center">
-                <TrendingUp className="h-3 w-3 text-green-500 mr-0.5" /> {t("Target 45%+")}
-              </span>
-            </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">{t("IoT sensor reading at 15cm depth")}</p>
-          </CardContent>
-        </Card>
-
-
-
-        {/* Active Alerts */}
-        <Card className="hover:border-[#DCE3D6] transition-all">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">{t("Critical Warnings")}</span>
-              <AlertTriangle className={`h-4 w-4 ${stats.alerts > 0 ? 'text-red-500 animate-bounce' : 'text-slate-400'}`} />
-            </div>
-            <div className="mt-2.5 flex items-baseline space-x-2">
-              <span className="text-2xl font-bold text-slate-900">{stats.alerts}</span>
-              <Badge variant={stats.alerts > 0 ? 'destructive' : 'secondary'}>
-                {stats.alerts > 0 ? t('Needs Attention') : t('Cleared')}
-              </Badge>
-            </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">{t("Active recommendations matching issues")}</p>
-          </CardContent>
-        </Card>
       </div>
 
-      {/* Main Charts & Side Widgets Section */}
+      {/* Middle Grid: Telemetry & Recommendations */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Soil moisture chart */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>{t("Soil Moisture & Temperature Index")}</CardTitle>
-            <CardDescription>{t("Visualizing continuous real-time readings from telemetry sensor nodes.")}</CardDescription>
+        
+        {/* Soil Telemetry Line Chart */}
+        <Card className="lg:col-span-2 shadow-sm rounded-3xl border-slate-200/70 dark:border-white/10">
+          <CardHeader className="pb-2 px-8 pt-8">
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-xl font-black">{t("IoT Subsurface Telemetry")}</CardTitle>
+                <CardDescription className="mt-1 font-medium">{t("Real-time moisture and temperature gradients at root zone.")}</CardDescription>
+              </div>
+              <Badge variant="outline" className="border-accent/30 text-accent bg-accent/5 rounded-lg px-3 py-1 font-bold">Live Stream</Badge>
+            </div>
           </CardHeader>
-          <CardContent className="h-72">
+          <CardContent className="h-80 px-4 pb-8 pt-4">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <AreaChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorMoisture" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#2388FF" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#2388FF" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FFB300" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#FFB300" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#C48A2A" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#C48A2A" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EDF1EA" />
-                  <XAxis dataKey="time" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(150, 150, 150, 0.1)" />
+                  <XAxis dataKey="time" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="moisture" stroke="#2563eb" strokeWidth={2} fillOpacity={1} fill="url(#colorMoisture)" />
-                  <Area type="monotone" dataKey="temp" stroke="#FFB300" strokeWidth={2} fillOpacity={1} fill="url(#colorTemp)" />
+                  <Area type="monotone" dataKey="moisture" stroke="#2388FF" strokeWidth={3} fillOpacity={1} fill="url(#colorMoisture)" />
+                  <Area type="monotone" dataKey="temp" stroke="#C48A2A" strokeWidth={3} fillOpacity={1} fill="url(#colorTemp)" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                {t("No telemetry logs registered for this parcel.")}
+              <div className="flex flex-col h-full w-full items-center justify-center text-center p-6 space-y-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 mx-4 mt-2">
+                <Activity className="h-10 w-10 text-slate-300 dark:text-slate-600" />
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">{t("No telemetry logs registered.")}</h4>
+                <Button variant="outline" size="sm" className="font-bold border-slate-200 dark:border-white/10 rounded-xl">
+                  Connect IoT Node
+                </Button>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Live Weather Widget */}
-        <Card className="flex flex-col justify-between">
-          <CardHeader className="pb-2">
-            <CardTitle>{t("Canopy Weather")}</CardTitle>
-            <CardDescription>{t("Live station metrics & forecast.")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6 flex-1 flex flex-col justify-center">
-            {weather.temperature !== undefined ? (
-              <>
-                {/* Header Temp */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-[#FFB300]">
-                      <Thermometer className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-slate-900">{weather.temperature}°C</h3>
-                      <p className="text-[10px] text-slate-500">{t("Feels like")} {weather.feels_like}°C • {weather.description}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Weather items */}
-                <div className="grid grid-cols-4 gap-2 border-t border-b border-[#EDF1EA]/70 py-4">
-                  <div className="text-center">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Humidity")}</span>
-                    <p className="mt-1 text-xs font-bold text-slate-800">{weather.humidity}%</p>
-                  </div>
-                  <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Wind")}</span>
-                    <p className="mt-1 text-xs font-bold text-slate-800">{weather.wind_speed} km/h</p>
-                  </div>
-                  <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Pressure")}</span>
-                    <p className="mt-1 text-xs font-bold text-slate-800">{weather.pressure}</p>
-                  </div>
-                  <div className="text-center border-l border-[#EDF1EA]/70">
-                    <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">{t("Rain")}</span>
-                    <p className="mt-1 text-xs font-bold text-slate-800">{weather.rain_forecast_mm} mm</p>
-                  </div>
-                </div>
-
-                {/* Bottom Info Location */}
-                <div className="flex items-center space-x-2 text-[10px] text-slate-500">
-                  <CloudRain className="h-4.5 w-4.5 text-blue-500" />
-                  <span>{t("Station")}: {weather.location}</span>
-                </div>
-              </>
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs text-slate-400 text-center">
-                {t("Weather service not configured.")}<br />{t("Please provide a valid API key.")}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recommendations & Satellite NDVI break downs */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* AI Recommendations panel */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
+        {/* Actionable AI Recommendations */}
+        <Card className="flex flex-col shadow-sm rounded-3xl border-slate-200/70 dark:border-white/10 overflow-hidden">
+          <div className="bg-primary px-8 py-6 text-white">
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>{t("Agronomic Recommendations")}</CardTitle>
-                <CardDescription>{t("Cross-verified guidelines from AI models & IoT telemetry feeds.")}</CardDescription>
-              </div>
-              <Badge variant={recommendation.severity === 'High' ? 'destructive' : recommendation.severity === 'Moderate' ? 'warning' : 'success'}>
-                {recommendation.severity === 'None' ? t('Healthy') : `${recommendation.severity} ${t('Threat')}`}
+              <CardTitle className="text-lg font-black text-white flex items-center">
+                <Brain className="h-5 w-5 mr-2 opacity-80" /> {t("AI Directive")}
+              </CardTitle>
+              <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 border-0 text-white shadow-none font-bold">
+                {recommendation.severity === 'None' ? t('Healthy') : `${recommendation.severity} ${t('Risk')}`}
               </Badge>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-xl bg-[#EDF1EA]/30 p-4 border border-[#DCE3D6]/50">
-              <div className="flex items-start space-x-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-50 text-[#2E7D32] border border-[#DCE3D6] shrink-0 mt-0.5">
-                  <Brain className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900">{recommendation.problem}</h4>
-                  <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">{recommendation.reason}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Suggested actions list */}
+          </div>
+          <CardContent className="p-8 flex flex-col flex-1 bg-white dark:bg-dark-surface space-y-6">
             <div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">{t("Suggested Action Item")}</span>
-              <p className="mt-1.5 text-xs text-slate-700 bg-white border border-[#DCE3D6]/70 p-3 rounded-lg leading-relaxed shadow-sm">
-                {recommendation.action}
-              </p>
+              <h4 className="text-base font-black text-slate-900 dark:text-white leading-tight">{recommendation.problem || t('No immediate threats detected.')}</h4>
+              <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{recommendation.reason || t('System analysis indicates optimal growth conditions across all parameters.')}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* NDVI Zone analysis circular stats */}
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>{t("NDVI Vegetation Zones")}</CardTitle>
-            <CardDescription>{t("Crop leaf growth zones based on Sentinel-2 bands.")}</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center flex-1 pb-6 space-y-4">
-            {/* Pie Chart container */}
-            <div className="h-44 w-full relative flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={ndviPieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={65}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {ndviPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute text-center">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">{t("Mean NDVI")}</span>
-                <p className="text-xl font-extrabold text-slate-900">{satellite.ndvi_mean}</p>
-              </div>
-            </div>
-
-            {/* Labels legends */}
-            <div className="w-full grid grid-cols-3 gap-2 text-center text-xs border-t border-[#EDF1EA]/70 pt-4">
-              <div>
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#2E7D32] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">{t("Healthy")}</span>
-                <p className="font-bold text-slate-900 mt-0.5">{satellite.healthy_pct}%</p>
-              </div>
-              <div className="border-l border-r border-[#EDF1EA]/70">
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#FFB300] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">{t("Moderate")}</span>
-                <p className="font-bold text-slate-900 mt-0.5">{satellite.moderate_pct}%</p>
-              </div>
-              <div>
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444] mr-1.5" />
-                <span className="text-slate-500 text-[10px]">{t("Stress")}</span>
-                <p className="font-bold text-slate-900 mt-0.5">{satellite.stress_pct}%</p>
+            
+            <div className="mt-auto pt-6 border-t border-slate-100 dark:border-white/10">
+              <span className="text-[10px] font-bold text-primary dark:text-primary-400 uppercase tracking-widest block mb-3">{t("Executive Action")}</span>
+              <div className="bg-slate-50 dark:bg-dark-elevated rounded-2xl p-5 border border-slate-200/60 dark:border-white/5 shadow-inner">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
+                  {recommendation.action || t('Maintain current agronomic schedule.')}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Bottom Row: Detailed Metrics */}
+      <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        {/* Current Sensor Snapshot */}
+        <Card className="shadow-sm rounded-3xl border-slate-200/70 dark:border-white/10 p-8 flex flex-col justify-center bg-white dark:bg-dark-surface relative overflow-hidden">
+          <div className="absolute right-0 top-0 p-8 opacity-5">
+            <Droplets className="h-32 w-32" />
+          </div>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t("Soil Moisture")}</span>
+          <div className="mt-4 flex flex-col">
+            <span className="text-6xl font-black text-slate-900 dark:text-white">{sensor.soil_moisture !== undefined ? `${sensor.soil_moisture}%` : 'N/A'}</span>
+            <div className="mt-4 flex items-center space-x-2">
+              <Badge variant="outline" className="border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-300">
+                <TrendingUp className="h-3.5 w-3.5 text-status-success mr-1.5" /> {t("Target 45%+ ")}
+              </Badge>
+            </div>
+          </div>
+        </Card>
+
+        {/* Live Weather Overview */}
+        <Card className="shadow-sm rounded-3xl border-slate-200/70 dark:border-white/10 p-8 bg-white dark:bg-dark-surface xl:col-span-2">
+           <div className="flex justify-between items-start mb-8">
+              <div>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t("Canopy Weather")}</span>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1 flex items-center">
+                  {weather.location || t('Unknown Station')}
+                </h3>
+              </div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-highlight/10 text-highlight dark:text-highlight-300">
+                <Thermometer className="h-7 w-7" />
+              </div>
+           </div>
+           
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Temperature")}</span>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{weather.temperature !== undefined ? `${weather.temperature}°C` : 'N/A'}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">{t("Feels like")} {weather.feels_like}°C</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Humidity")}</span>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{weather.humidity !== undefined ? `${weather.humidity}%` : 'N/A'}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Wind Speed")}</span>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{weather.wind_speed !== undefined ? `${weather.wind_speed}` : 'N/A'}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">km/h</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("Rain Forecast")}</span>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{weather.rain_forecast_mm !== undefined ? `${weather.rain_forecast_mm}` : 'N/A'}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">mm (24h)</p>
+              </div>
+           </div>
+        </Card>
+      </div>
+
     </div>
   )
 }

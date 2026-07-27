@@ -117,7 +117,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F7F9F5]">
+    <div className="flex min-h-screen bg-background dark:bg-dark-bg">
       
       {/* ─── LEFT COLUMN: PREMIUM AGRICULTURAL SCHEMATIC ───────────────────────────── */}
       <div className="relative hidden w-1/2 flex-col justify-between bg-gradient-to-br from-[#122c15] via-[#091a0c] to-[#040c06] p-12 text-white lg:flex overflow-hidden">
@@ -153,12 +153,12 @@ export default function Register() {
 
         {/* Top logo */}
         <div className="relative z-10 flex items-center space-x-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] text-white border border-[#DCE3D6]/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-900 text-white border border-slate-200 dark:border-white/10/20">
             <Compass className="h-5 w-5" />
           </div>
           <div>
             <span className="text-sm font-extrabold tracking-tight">KAIROS</span>
-            <span className="block text-[8px] font-bold text-[#2E7D32] uppercase tracking-wider -mt-1">Precision Ag</span>
+            <span className="block text-[8px] font-bold text-primary dark:text-primary-300 uppercase tracking-wider -mt-1">Precision Ag</span>
           </div>
         </div>
 
@@ -173,9 +173,9 @@ export default function Register() {
         </div>
 
         {/* Bottom review card */}
-        <div className="relative z-10 rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur-md">
+        <div className="relative z-10 rounded-2xl bg-white dark:bg-dark-surface/5 border border-white/10 p-4 backdrop-blur-md">
           <div className="flex items-center space-x-2.5">
-            <ShieldCheck className="h-5 w-5 text-[#FFB300] shrink-0" />
+            <ShieldCheck className="h-5 w-5 text-highlight dark:text-highlight-300 shrink-0" />
             <span className="text-xs font-semibold">Zero-Noise Verification Active</span>
           </div>
           <p className="mt-2 text-[10px] text-slate-400 leading-relaxed">
@@ -185,24 +185,24 @@ export default function Register() {
       </div>
 
       {/* ─── RIGHT COLUMN: GLASSMORPHISM REGISTRATION FORM CARD ─────────────────────── */}
-      <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2 bg-[#F7F9F5] bg-grid-pattern relative overflow-y-auto">
+      <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2 bg-background dark:bg-dark-bg bg-grid-pattern relative overflow-y-auto">
         {/* Mobile top branding */}
         <div className="absolute top-6 left-6 flex items-center space-x-2 lg:hidden">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#2E7D32] text-white">
             <Compass className="h-4.5 w-4.5" />
           </div>
-          <span className="text-xs font-bold tracking-tight text-slate-900">KAIROS</span>
+          <span className="text-xs font-bold tracking-tight text-slate-900 dark:text-white">KAIROS</span>
         </div>
 
         <div className="w-full max-w-md space-y-6 pt-10 lg:pt-0">
           <div className="space-y-1 text-center lg:text-left">
-            <h3 className="text-xl font-bold tracking-tight text-slate-900">Create Farm Profile</h3>
-            <p className="text-xs text-slate-500">Provide land details to activate satellite indices tracking.</p>
+            <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Create Farm Profile</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Provide land details to activate satellite indices tracking.</p>
           </div>
 
           {/* Glassmorphic signup card */}
-          <Card className="glass border-[#DCE3D6]/70 shadow-xl bg-white/75 backdrop-blur-md">
-            <CardContent className="pt-6">
+          <Card className="glass border-slate-200/70 dark:border-white/10 shadow-premium bg-white/90 dark:bg-dark-surface/90 backdrop-blur-md rounded-[2rem]">
+            <CardContent className="pt-8 px-8 pb-8">
               <form onSubmit={handleSubmit} className="space-y-3.5">
                 {errors.general && (
                   <div className="rounded-lg bg-red-50 border border-red-100 p-2.5 text-xs font-semibold text-red-700">
@@ -213,7 +213,7 @@ export default function Register() {
                 {/* Grid Split Name & Farm Name */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <User className="h-3 w-3 mr-1 text-slate-400" /> Farmer Name
                     </label>
                     <Input
@@ -227,7 +227,7 @@ export default function Register() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <Sprout className="h-3 w-3 mr-1 text-slate-400" /> Farm Name
                     </label>
                     <Input
@@ -245,7 +245,7 @@ export default function Register() {
                 {/* Grid Split Farm Size & Location */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <Ruler className="h-3 w-3 mr-1 text-slate-400" /> Size (Hectares)
                     </label>
                     <Input
@@ -260,7 +260,7 @@ export default function Register() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <Globe className="h-3 w-3 mr-1 text-slate-400" /> Location (City)
                     </label>
                     <Input
@@ -277,14 +277,14 @@ export default function Register() {
 
                 {/* Crop Type Dropdown selection */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                  <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                     <Sprout className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> Crop Cultivation
                   </label>
                   <select
                     value={cropType}
                     onChange={(e) => setCropType(e.target.value)}
                     disabled={loading}
-                    className="flex h-10 w-full rounded-lg border border-[#DCE3D6] bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                    className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
                   >
                     <option value="Rice">Rice</option>
                     <option value="Wheat">Wheat</option>
@@ -296,7 +296,7 @@ export default function Register() {
 
                 {/* Email Address */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                  <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                     <Mail className="h-3.5 w-3.5 mr-1.5 text-slate-400" /> Email Address
                   </label>
                   <Input
@@ -313,7 +313,7 @@ export default function Register() {
                 {/* Password field split inputs */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <Lock className="h-3 w-3 mr-1 text-slate-400" /> Password
                     </label>
                     <Input
@@ -327,7 +327,7 @@ export default function Register() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-600 pl-0.5 flex items-center">
+                    <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5 flex items-center">
                       <Lock className="h-3 w-3 mr-1 text-slate-400" /> Confirm
                     </label>
                     <Input
@@ -342,16 +342,16 @@ export default function Register() {
                   </div>
                 </div>
 
-                <Button type="submit" isLoading={loading} className="w-full mt-4 bg-[#2E7D32] hover:bg-[#1B5E20]">
+                <Button type="submit" isLoading={loading} className="w-full mt-6 bg-primary hover:bg-primary-600 rounded-xl py-6 font-bold shadow-sm">
                   Register Agrarian Account <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>
             </CardContent>
           </Card>
 
-          <div className="text-center text-xs text-slate-500">
+          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
             Already registered?{' '}
-            <Link to="/login" className="font-semibold text-[#2E7D32] hover:underline">
+            <Link to="/login" className="font-semibold text-primary dark:text-primary-300 hover:underline">
               Sign In
             </Link>
           </div>
