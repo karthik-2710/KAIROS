@@ -1,0 +1,9 @@
+{
+    "model_version": "cotton_v1.0.0",
+    "crop": "cotton",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-24T18:03:23.344361",
+    "evaluation_f1": 0.9925978498261073
+}

@@ -60,6 +60,17 @@ export default function Farms() {
   const [weatherZone, setWeatherZone] = React.useState('Zone B - Subtropical')
   const [satelliteCoverage, setSatelliteCoverage] = React.useState('Sentinel-2 Tile 43PGP')
 
+  // Notification & Contact fields
+  const [phone, setPhone] = React.useState('')
+  const [whatsapp, setWhatsapp] = React.useState('')
+  const [usePhoneAsWhatsapp, setUsePhoneAsWhatsapp] = React.useState(false)
+  const [email, setEmail] = React.useState('')
+  const [preferredLanguage, setPreferredLanguage] = React.useState('English')
+  const [notifPrefs, setNotifPrefs] = React.useState({
+    dashboard: true, whatsapp: false, email: false, sms: false,
+    weekly_summary: true, monthly_report: false
+  })
+
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState('')
 
@@ -101,6 +112,16 @@ export default function Farms() {
     setWeatherZone('Zone B - Subtropical')
     setSatelliteCoverage('Sentinel-2 Tile 43PGP')
 
+    setPhone('')
+    setWhatsapp('')
+    setUsePhoneAsWhatsapp(false)
+    setEmail('')
+    setPreferredLanguage('English')
+    setNotifPrefs({
+      dashboard: true, whatsapp: false, email: false, sms: false,
+      weekly_summary: true, monthly_report: false
+    })
+
     setEditMode(false)
     setTargetEditId(null)
     setModalOpen(true)
@@ -132,6 +153,12 @@ export default function Farms() {
     setHarvestDate(meta.harvestDate)
     setWeatherZone(meta.weatherZone)
     setSatelliteCoverage(meta.satelliteCoverage)
+
+    setPhone(farm.phone || '')
+    setWhatsapp(farm.whatsapp || '')
+    setUsePhoneAsWhatsapp(farm.use_phone_as_whatsapp === 1)
+    setEmail(farm.email || '')
+    setPreferredLanguage(farm.preferred_language || 'English')
 
     setEditMode(true)
     setTargetEditId(id)
@@ -168,7 +195,13 @@ export default function Farms() {
         name: name.trim(),
         crop_type: cropType,
         area_ha: parseFloat(area) || 0,
-        polygon: polygon.trim()
+        polygon: polygon.trim(),
+        phone: phone.trim(),
+        whatsapp: usePhoneAsWhatsapp ? phone.trim() : whatsapp.trim(),
+        use_phone_as_whatsapp: usePhoneAsWhatsapp ? 1 : 0,
+        email: email.trim(),
+        preferred_language: preferredLanguage,
+        notification_preferences: notifPrefs
       }
 
       let updatedId = targetEditId
@@ -534,11 +567,16 @@ export default function Farms() {
                 disabled={loading}
                 className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600"
               >
-                <option value="Rice">Rice</option>
-                <option value="Mango">Mango</option>
-                <option value="Wheat">Wheat</option>
+                <option value="Bajra">Bajra</option>
+                <option value="Banana">Banana</option>
                 <option value="Cotton">Cotton</option>
-                <option value="Barley">Barley</option>
+                <option value="Jowar">Jowar</option>
+                <option value="Onion">Onion</option>
+                <option value="Orange">Orange</option>
+                <option value="Rice">Rice</option>
+                <option value="Soybean">Soybean</option>
+                <option value="Sugarcane">Sugarcane</option>
+                <option value="Wheat">Wheat</option>
               </select>
             </div>
             <div className="space-y-1">
@@ -613,6 +651,53 @@ export default function Farms() {
                 disabled={loading}
                 required
               />
+            </div>
+          </div>
+
+          {/* Contact & Notifications */}
+          <div className="border-t border-slate-100 dark:border-white/5 pt-4 space-y-4">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300">Contact & Notifications</h4>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5">Phone Number *</label>
+                <Input type="text" placeholder="+1 234 567 8900" value={phone} onChange={e => setPhone(e.target.value)} disabled={loading} required />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5">WhatsApp Number</label>
+                <Input type="text" placeholder="+1 234 567 8900" value={usePhoneAsWhatsapp ? phone : whatsapp} onChange={e => setWhatsapp(e.target.value)} disabled={loading || usePhoneAsWhatsapp} />
+              </div>
+            </div>
+
+            <label className="flex items-center space-x-2 text-xs font-semibold text-slate-600 dark:text-slate-400 cursor-pointer pl-0.5">
+              <input type="checkbox" checked={usePhoneAsWhatsapp} onChange={e => setUsePhoneAsWhatsapp(e.target.checked)} className="rounded border-slate-300" />
+              <span>Use Phone Number as WhatsApp</span>
+            </label>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5">Email Address *</label>
+                <Input type="email" placeholder="farmer@example.com" value={email} onChange={e => setEmail(e.target.value)} disabled={loading} required />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5">Preferred Language</label>
+                <select value={preferredLanguage} onChange={e => setPreferredLanguage(e.target.value)} disabled={loading} className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600">
+                  <option value="English">English</option>
+                  <option value="Tamil">Tamil</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 pl-0.5">Notification Channels</label>
+              <div className="flex gap-4">
+                {['dashboard', 'whatsapp', 'email', 'sms'].map(channel => (
+                  <label key={channel} className="flex items-center space-x-2 text-xs font-semibold text-slate-600 dark:text-slate-400 cursor-pointer">
+                    <input type="checkbox" checked={(notifPrefs as any)[channel]} onChange={e => setNotifPrefs({...notifPrefs, [channel]: e.target.checked})} className="rounded border-slate-300" />
+                    <span className="capitalize">{channel}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 

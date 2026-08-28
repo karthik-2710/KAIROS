@@ -15,12 +15,12 @@ if __name__ == '__main__':
     # Initialize database on startup
     init_db()
 
-    # Pre-load AI model in background
+    # Discover and validate AI crop models in background
     try:
-        from app.ai.model_loader import load_model
-        load_model()
+        from app.ai.model_registry import model_registry
+        model_registry.discover_models()
     except Exception as e:
-        print(f"[KAIROS] AI model pre-load skipped: {e}")
+        print(f"[KAIROS] AI model discovery skipped: {e}")
 
     # Start Digital Twin Scheduler
     try:

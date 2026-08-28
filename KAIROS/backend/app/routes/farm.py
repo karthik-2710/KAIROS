@@ -5,6 +5,8 @@ from app.utils.auth import require_auth
 from services.sentinel_service import SentinelHubService
 from services.statistical_service import StatisticalService
 from datetime import datetime, timedelta
+from app.notifications.rule_engine import RuleEngine
+from app.notifications.notification_engine import notification_engine
 
 farm_bp = Blueprint('farm', __name__, url_prefix='/farms')
 
@@ -58,18 +60,50 @@ def create_farm():
     if isinstance(polygon, (dict, list)):
         polygon = json.dumps(polygon)
 
+    phone = data.get('phone', '').strip()
+    whatsapp = data.get('whatsapp', '').strip()
+    use_phone_as_whatsapp = int(data.get('use_phone_as_whatsapp', 0))
+    email = data.get('email', '').strip()
+    preferred_language = data.get('preferred_language', 'English')
+    
     if not name or not crop_type:
         return jsonify({'error': 'Farm name and crop type are required'}), 400
 
     db = get_db()
     try:
         cursor = db.execute(
-            """INSERT INTO farms (user_id, name, crop_type, area_ha, polygon, health_score)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (request.user_id, name, crop_type, area_ha, polygon, 50)
+            """INSERT INTO farms (user_id, name, crop_type, area_ha, polygon, health_score, phone, whatsapp, use_phone_as_whatsapp, email, preferred_language)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (request.user_id, name, crop_type, area_ha, polygon, 50, phone, whatsapp, use_phone_as_whatsapp, email, preferred_language)
         )
+        farm_id = cursor.lastrowid
+        
+        # Create notification preferences
+        prefs = data.get('notification_preferences', {})
+        db.execute(
+            """INSERT INTO notification_preferences (
+                farm_id, dashboard, whatsapp, email, sms, weekly_summary, monthly_report,
+                disease_detection, disease_forecast, ndvi_alerts, weather_alerts, irrigation_alerts, nutrient_alerts, harvest_reminders, general_updates
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (farm_id, 
+             int(prefs.get('dashboard', 1)),
+             int(prefs.get('whatsapp', 0)),
+             int(prefs.get('email', 0)),
+             int(prefs.get('sms', 0)),
+             int(prefs.get('weekly_summary', 1)),
+             int(prefs.get('monthly_report', 0)),
+             int(prefs.get('disease_detection', 1)),
+             int(prefs.get('disease_forecast', 1)),
+             int(prefs.get('ndvi_alerts', 1)),
+             int(prefs.get('weather_alerts', 1)),
+             int(prefs.get('irrigation_alerts', 1)),
+             int(prefs.get('nutrient_alerts', 1)),
+             int(prefs.get('harvest_reminders', 1)),
+             int(prefs.get('general_updates', 1)))
+        )
+        
         db.commit()
-        farm = db.execute("SELECT * FROM farms WHERE id = ?", (cursor.lastrowid,)).fetchone()
+        farm = db.execute("SELECT * FROM farms WHERE id = ?", (farm_id,)).fetchone()
         return jsonify(_row_to_dict(farm)), 201
     finally:
         db.close()
@@ -146,9 +180,14 @@ def calculate_ndvi(farm_id):
         # Save to satellite_data table
         cursor = db.execute(
             """INSERT INTO satellite_data
-               (farm_id, ndvi_mean, ndvi_min, ndvi_max, healthy_pct, moderate_pct, stress_pct, cloud_coverage)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+               (farm_id, ndvi_mean, ndvi_min, ndvi_max, 
+                ndre_mean, ndre_min, ndre_max, 
+                ndwi_mean, ndwi_min, ndwi_max, 
+                healthy_pct, moderate_pct, stress_pct, cloud_coverage)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (farm_id, stats.get('ndvi_mean'), stats.get('ndvi_min'), stats.get('ndvi_max'),
+             stats.get('ndre_mean'), stats.get('ndre_min'), stats.get('ndre_max'),
+             stats.get('ndwi_mean'), stats.get('ndwi_min'), stats.get('ndwi_max'),
              stats.get('healthy_pct'), stats.get('moderate_pct'), stats.get('stress_pct'), stats.get('cloud_coverage'))
         )
         sat_id = cursor.lastrowid
@@ -171,6 +210,11 @@ def calculate_ndvi(farm_id):
             )
         
         db.commit()
+        
+        # Evaluate for low NDVI notifications
+        notifs = RuleEngine.evaluate_satellite_data(stats, farm_id, request.user_id)
+        if notifs:
+            notification_engine.process_notifications(notifs)
         
         return jsonify(stats), 200
     finally:

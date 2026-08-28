@@ -95,7 +95,7 @@ export const analysisAPI = {
       const formData = new FormData();
       formData.append('image', file);
       formData.append('farm_id', farmId);
-      return api.post('/api/ai/analyze-leaf', formData, {
+      return api.post('/ai/analyze-leaf', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 60000,
       });

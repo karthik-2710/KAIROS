@@ -32,6 +32,11 @@ def init_db():
             area_ha     REAL    DEFAULT 0,
             polygon     TEXT,
             health_score INTEGER DEFAULT 50,
+            phone       TEXT,
+            whatsapp    TEXT,
+            use_phone_as_whatsapp INTEGER DEFAULT 0,
+            email       TEXT,
+            preferred_language TEXT DEFAULT 'English',
             created_at  TEXT    DEFAULT (datetime('now')),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
@@ -42,6 +47,9 @@ def init_db():
             temperature     REAL,
             humidity        REAL,
             soil_moisture   REAL,
+            nitrogen        REAL    DEFAULT 0,
+            phosphorus      REAL    DEFAULT 0,
+            potassium       REAL    DEFAULT 0,
             light           REAL    DEFAULT 0,
             mq135           REAL    DEFAULT 0,
             scenario        TEXT    DEFAULT 'Healthy Farm',
@@ -81,11 +89,19 @@ def init_db():
             ndvi_mean       REAL,
             ndvi_min        REAL,
             ndvi_max        REAL,
+            ndre_mean       REAL,
+            ndre_min        REAL,
+            ndre_max        REAL,
+            ndwi_mean       REAL,
+            ndwi_min        REAL,
+            ndwi_max        REAL,
             healthy_pct     REAL,
             moderate_pct    REAL,
             stress_pct      REAL,
             band_b4         REAL,
+            band_b5         REAL,
             band_b8         REAL,
+            band_b11        REAL,
             cloud_coverage  REAL,
             image_path      TEXT,
             timestamp       TEXT    DEFAULT (datetime('now')),
@@ -177,6 +193,99 @@ def init_db():
             FOREIGN KEY (leaf_scan_id) REFERENCES leaf_scans(id) ON DELETE SET NULL,
             FOREIGN KEY (recommendation_id) REFERENCES recommendations(id) ON DELETE SET NULL
         );
+        CREATE TABLE IF NOT EXISTS notifications (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id             INTEGER NOT NULL,
+            farm_id             INTEGER,
+            title               TEXT NOT NULL,
+            description         TEXT NOT NULL,
+            severity            TEXT DEFAULT 'Information',
+            category            TEXT DEFAULT 'General',
+            channel             TEXT DEFAULT 'dashboard',
+            is_read             INTEGER DEFAULT 0,
+            action_url          TEXT,
+            timestamp           TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (farm_id) REFERENCES farms(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_preferences (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            farm_id             INTEGER NOT NULL UNIQUE,
+            dashboard           INTEGER DEFAULT 1,
+            whatsapp            INTEGER DEFAULT 0,
+            email               INTEGER DEFAULT 0,
+            sms                 INTEGER DEFAULT 0,
+            weekly_summary      INTEGER DEFAULT 1,
+            monthly_report      INTEGER DEFAULT 0,
+            disease_detection   INTEGER DEFAULT 1,
+            disease_forecast    INTEGER DEFAULT 1,
+            ndvi_alerts         INTEGER DEFAULT 1,
+            weather_alerts      INTEGER DEFAULT 1,
+            irrigation_alerts   INTEGER DEFAULT 1,
+            nutrient_alerts     INTEGER DEFAULT 1,
+            harvest_reminders   INTEGER DEFAULT 1,
+            general_updates     INTEGER DEFAULT 1,
+            FOREIGN KEY (farm_id) REFERENCES farms(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_delivery_logs (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            notification_id     INTEGER NOT NULL,
+            provider            TEXT NOT NULL,
+            status              TEXT NOT NULL,
+            error_message       TEXT,
+            timestamp           TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS weather_alerts (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            alert_id            TEXT UNIQUE,
+            farm_id             INTEGER NOT NULL,
+            crop                TEXT NOT NULL,
+            alert_type          TEXT NOT NULL,
+            severity            TEXT NOT NULL,
+            title               TEXT NOT NULL,
+            threat              TEXT,
+            why_it_matters      TEXT,
+            recommended_action  TEXT,
+            weather_observation TEXT,
+            forecast_summary    TEXT,
+            model_risk          TEXT,
+            recommendation_id   INTEGER,
+            language            TEXT DEFAULT 'en',
+            whatsapp_message    TEXT,
+            delivery_status     TEXT DEFAULT 'DELIVERED',
+            timestamp           TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (farm_id) REFERENCES farms(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS market_price_cache (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            cache_key           TEXT NOT NULL UNIQUE,
+            crop_id             TEXT NOT NULL,
+            state               TEXT NOT NULL,
+            payload_json        TEXT NOT NULL,
+            last_updated        TEXT DEFAULT (datetime('now')),
+            expires_at          TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS market_price_observations (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            crop_id             TEXT NOT NULL,
+            commodity           TEXT NOT NULL,
+            market              TEXT NOT NULL,
+            district            TEXT NOT NULL,
+            state               TEXT NOT NULL,
+            min_price           REAL,
+            max_price           REAL,
+            modal_price         REAL,
+            unit                TEXT DEFAULT '₹/quintal',
+            arrival_date        TEXT NOT NULL,
+            source              TEXT NOT NULL,
+            recorded_at         TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed demo user and demo farm if empty
@@ -202,10 +311,11 @@ def init_db():
             from datetime import datetime, timedelta
             ts = (datetime.utcnow() - timedelta(hours=i*3)).isoformat()
             cursor.execute(
-                """INSERT INTO sensor_data (farm_id, temperature, humidity, soil_moisture, light, mq135, rain_detected, timestamp)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                """INSERT INTO sensor_data (farm_id, temperature, humidity, soil_moisture, nitrogen, phosphorus, potassium, light, mq135, rain_detected, timestamp)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (fid, round(28 + random.random()*8, 1), round(55 + random.random()*30, 1),
-                 round(30 + random.random()*40, 1), round(600 + random.random()*400, 1), round(100 + random.random()*300, 1), 0, ts)
+                 round(30 + random.random()*40, 1), int(80 + random.random()*40), int(30 + random.random()*20), int(150 + random.random()*50),
+                 round(600 + random.random()*400, 1), round(100 + random.random()*300, 1), 0, ts)
             )
 
         cursor.execute(

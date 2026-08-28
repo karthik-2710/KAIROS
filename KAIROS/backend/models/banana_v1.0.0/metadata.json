@@ -1,0 +1,9 @@
+{
+    "model_version": "banana_v1.0.0",
+    "crop": "banana",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-20T17:57:34.317987",
+    "evaluation_f1": 0.9538926681783824
+}

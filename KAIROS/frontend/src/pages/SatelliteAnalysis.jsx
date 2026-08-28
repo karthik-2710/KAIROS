@@ -179,6 +179,28 @@ export default function SatelliteAnalysis() {
             </div>
           </div>
 
+          {/* Additional Indices */}
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-5">Additional Indices</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-[var(--color-text-primary)]">NDRE</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">Chlorophyll Stress</p>
+                </div>
+                <span className="text-xl font-bold font-poppins text-[var(--color-text-primary)]">{data?.ndre_mean?.toFixed(3) ?? '--'}</span>
+              </div>
+              <div className="h-px w-full bg-[var(--color-border)]"></div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-[var(--color-text-primary)]">NDWI</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">Water Moisture Indicator</p>
+                </div>
+                <span className="text-xl font-bold font-poppins text-[var(--color-text-primary)]">{data?.ndwi_mean?.toFixed(3) ?? '--'}</span>
+              </div>
+            </div>
+          </div>
+
           {/* Zone breakdown */}
           <div className="bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm rounded-2xl p-6">
             <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-5">Zone Breakdown</h3>

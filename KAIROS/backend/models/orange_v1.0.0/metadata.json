@@ -1,0 +1,9 @@
+{
+    "model_version": "orange_v1.0.0",
+    "crop": "orange",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-25T05:26:22.231134",
+    "evaluation_f1": 0.8226000414679661
+}

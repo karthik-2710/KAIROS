@@ -5,6 +5,8 @@ from app.ai.predictor import predict_disease
 from app.utils.auth import require_auth
 from app.database.db import get_db
 from config import Config
+from app.notifications.rule_engine import RuleEngine
+from app.notifications.notification_engine import notification_engine
 
 prediction_bp = Blueprint('prediction', __name__, url_prefix='/predict')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
@@ -55,6 +57,12 @@ def predict():
         db.commit()
     finally:
         db.close()
+
+    # Trigger Notifications if a disease was found
+    if farm_id:
+        notifications = RuleEngine.evaluate_disease_prediction(result, farm_id, request.user_id)
+        if notifications:
+            notification_engine.process_notifications(notifications)
 
     return jsonify(result), 200
 

@@ -2,6 +2,8 @@ import { Bell, Sun, Moon, ChevronDown, Wifi, WifiOff } from 'lucide-react'
 import { useFarmStore, useThemeStore } from '@/store/farmStore'
 import { useAuthStore } from '@/store/authStore'
 import { useState, useEffect } from 'react'
+import { NotificationDrawer } from '../notifications/NotificationDrawer'
+import api from '@/services/api'
 
 export default function Navbar() {
   const { farms, selectedFarm, setSelectedFarm } = useFarmStore()
@@ -9,6 +11,8 @@ export default function Navbar() {
   const { user } = useAuthStore()
   const [sensorOnline, setSensorOnline] = useState(true)
   const [showFarmDropdown, setShowFarmDropdown] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
 
   // Simulate sensor status ping
   useEffect(() => {
@@ -17,6 +21,15 @@ export default function Navbar() {
     }, 10000)
     return () => clearInterval(interval)
   }, [])
+
+  // Fetch initial unread count
+  useEffect(() => {
+    if (user) {
+      api.get('/notifications?limit=1')
+        .then(res => setUnreadCount(res.data.unread_count || 0))
+        .catch(console.error)
+    }
+  }, [user])
 
   return (
     <header className="h-16 bg-[var(--color-surface)] border-b border-[var(--color-border)] flex items-center justify-between px-6 z-20 flex-shrink-0">
@@ -75,9 +88,14 @@ export default function Navbar() {
         </button>
 
         {/* Notifications */}
-        <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[var(--color-bg)] transition-colors relative text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">
+        <button 
+          onClick={() => setIsDrawerOpen(true)}
+          className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[var(--color-bg)] transition-colors relative text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+        >
           <Bell className="w-4.5 h-4.5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-danger)] rounded-full border-2 border-[var(--color-surface)]"></span>
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-danger)] rounded-full border-2 border-[var(--color-surface)]"></span>
+          )}
         </button>
 
         {/* Avatar */}
@@ -85,6 +103,17 @@ export default function Navbar() {
           {user?.name?.[0]?.toUpperCase() || 'K'}
         </div>
       </div>
+      
+      <NotificationDrawer 
+        isOpen={isDrawerOpen} 
+        onClose={() => {
+          setIsDrawerOpen(false);
+          // Refresh unread count on close
+          api.get('/notifications?limit=1')
+            .then(res => setUnreadCount(res.data.unread_count || 0))
+            .catch(console.error);
+        }} 
+      />
     </header>
   )
 }

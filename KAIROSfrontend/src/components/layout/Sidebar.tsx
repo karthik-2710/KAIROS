@@ -9,7 +9,11 @@ import {
   X,
   Compass,
   Radio,
-  Settings
+  Settings,
+  Bug,
+  TrendingUp,
+  Store,
+  CloudSun
 } from "lucide-react"
 import { cn } from "@/utils/cn"
 
@@ -28,6 +32,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: t("IoT Sensor Grid"), to: "/app/iot", icon: Radio },
     { name: t("Satellite NDVI"), to: "/app/satellite", icon: Satellite },
     { name: t("AI Leaf Scan"), to: "/app/leaf-scan", icon: Camera },
+    { name: t("Pest Detection"), to: "/app/pest-detection", icon: Bug },
+    { name: t("Early Detection"), to: "/app/early-detection", icon: TrendingUp },
+    { name: t("Weather Intelligence"), to: "/app/weather", icon: CloudSun },
+    { name: t("Market Prices"), to: "/app/market-prices", icon: Store },
     { name: t("Recommendations"), to: "/app/recommendations", icon: Brain },
     { name: t("Analysis History"), to: "/app/history", icon: History },
     { name: t("System Settings"), to: "/app/settings", icon: Settings },

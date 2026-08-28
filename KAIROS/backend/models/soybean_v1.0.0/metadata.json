@@ -1,0 +1,9 @@
+{
+    "model_version": "soybean_v1.0.0",
+    "crop": "soybean",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-24T18:44:16.920175",
+    "evaluation_f1": 0.9104913151364764
+}

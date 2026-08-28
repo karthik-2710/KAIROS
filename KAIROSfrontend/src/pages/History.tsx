@@ -1,198 +1,140 @@
-import React from 'react'
+import { useState } from 'react'
+import { useOutletContext, useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { FarmContextType } from '@/components/layout/Layout'
+import { historyAPI } from '@/services/api'
+import { AnalysisHistoryItem } from '@/types'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { Modal } from '@/components/ui/Modal'
 import { 
   ResponsiveContainer, 
   BarChart, 
   Bar, 
   XAxis, 
   YAxis, 
-  Tooltip,
-  CartesianGrid,
-  Cell
+  Tooltip, 
+  CartesianGrid, 
+  Cell 
 } from 'recharts'
 import { 
   Calendar, 
   Search, 
   SlidersHorizontal, 
   AlertTriangle, 
-  CloudSun, 
   Sprout, 
   CheckCircle2, 
   Layers, 
   Camera, 
   ShieldAlert, 
-  CheckCircle,
-  HelpCircle
+  CheckCircle, 
+  HelpCircle, 
+  Award, 
+  ChevronRight, 
+  RefreshCw, 
+  Sparkles, 
+  Info 
 } from 'lucide-react'
-
-interface HistoryEvent {
-  id: number
-  type: 'disease' | 'weather' | 'sensor' | 'rec' | 'treatment'
-  title: string
-  crop: 'Rice' | 'Mango' | 'Wheat' | 'Cotton' | 'Barley'
-  severity: 'Low' | 'Moderate' | 'High'
-  status: 'Resolved' | 'Pending' | 'Applied'
-  date: string // e.g. "2026-07-15"
-  desc: string
-  actionLabel?: string
-}
+import { useTranslation } from 'react-i18next'
+import { 
+  localizeCrop, 
+  localizeThreat, 
+  localizeSeverity, 
+  localizeRationale, 
+  localizeAction 
+} from '@/utils/localize'
 
 export default function History() {
+  const { t } = useTranslation()
+  const { selectedFarmId, farms } = useOutletContext<FarmContextType>()
+  const farmId = selectedFarmId || farms[0]?.id || 1
+  const currentFarm = farms.find(f => f.id === farmId) || farms[0]
+  const navigate = useNavigate()
+
   // Filter States
-  const [searchQuery, setSearchQuery] = React.useState('')
-  const [selectedCrop, setSelectedCrop] = React.useState('All')
-  const [selectedSeverity, setSelectedSeverity] = React.useState('All')
-  const [selectedStatus, setSelectedStatus] = React.useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCrop, setSelectedCrop] = useState('All')
+  const [selectedSeverity, setSelectedSeverity] = useState('All')
+  const [selectedStatus, setSelectedStatus] = useState('All')
 
-  // Seeded unified history events list
-  const historyEvents: HistoryEvent[] = [
-    {
-      id: 1,
-      type: 'disease',
-      title: 'Bacterial Leaf Blight Diagnosed',
-      crop: 'Rice',
-      severity: 'High',
-      status: 'Pending',
-      date: '2026-07-15',
-      desc: 'MobileNetV3 small network isolated cell structure vectors on North Paddy Field leaf snapshots. Recommended copper-based bactericide.',
-      actionLabel: 'CNN Scanner: 97.4% confidence'
-    },
-    {
-      id: 2,
-      type: 'treatment',
-      title: 'Fungicide Spray Treatment Applied',
-      crop: 'Rice',
-      severity: 'Moderate',
-      status: 'Applied',
-      date: '2026-07-14',
-      desc: 'Applied copper hydroxide bactericide following leaf scan diagnostic warning protocols. Row sectors 3 and 4 covered.',
-      actionLabel: 'Treatment: Copper Hydroxide'
-    },
-    {
-      id: 3,
-      type: 'sensor',
-      title: 'Critically Low Soil Moisture Warning',
-      crop: 'Mango',
-      severity: 'High',
-      status: 'Resolved',
-      date: '2026-07-12',
-      desc: 'IoT Node #02 capacitance sensor logged soil moisture levels at 24% for 3 consecutive hours. Triggered automatic moisture alerts.',
-      actionLabel: 'IoT Sensor Grid: Node #02'
-    },
-    {
-      id: 4,
-      type: 'rec',
-      title: 'Irrigation Advisory Dispatched',
-      crop: 'Mango',
-      severity: 'Moderate',
-      status: 'Resolved',
-      date: '2026-07-12',
-      desc: 'Agronomist recommendation dispatched: Trigger pre-dawn deep watering cycle to mitigate ambient evaporation.',
-      actionLabel: 'Advisory: Water Index rule'
-    },
-    {
-      id: 5,
-      type: 'weather',
-      title: 'Dry Wind & High Heat Wave Event',
-      crop: 'Wheat',
-      severity: 'Low',
-      status: 'Resolved',
-      date: '2026-07-10',
-      desc: 'OpenWeatherMap API flagged localized temperatures over 38°C with sub-20% relative humidity. Elevated transpiration rates noted.',
-      actionLabel: 'Weather: Heat warning'
-    },
-    {
-      id: 6,
-      type: 'disease',
-      title: 'Leaf Spot Pathology Cleared',
-      crop: 'Barley',
-      severity: 'Low',
-      status: 'Resolved',
-      date: '2026-07-06',
-      desc: 'Leaf snapshot scanned via mobile diagnostics. Cell structure indicators analyzed as normal. No pathogen spores detected.',
-      actionLabel: 'CNN Scanner: 99.1% healthy'
-    },
-    {
-      id: 7,
-      type: 'sensor',
-      title: 'Soil Acidification Detected (pH 5.4)',
-      crop: 'Rice',
-      severity: 'High',
-      status: 'Pending',
-      date: '2026-07-02',
-      desc: 'IoT Node #03 reports consecutive pH levels dropping to 5.4. Cross-referencing against moisture data to verify anomaly.',
-      actionLabel: 'IoT Sensor Grid: Node #03'
-    },
-    {
-      id: 8,
-      type: 'treatment',
-      title: 'Liming Fertilizer Application',
-      crop: 'Cotton',
-      severity: 'Low',
-      status: 'Applied',
-      date: '2026-06-28',
-      desc: 'Applied agricultural lime to target field sectors to stabilize soil acidity levels back to WGS baseline limits.',
-      actionLabel: 'Treatment: Soil Amendment'
-    }
-  ]
+  // Selected item for historical detail modal
+  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisHistoryItem | null>(null)
 
-  // Filter logic
+  // Fetch real farm-scoped analysis history
+  const { 
+    data: historyEvents = [], 
+    isLoading, 
+    refetch, 
+    isRefetching 
+  } = useQuery({
+    queryKey: ['analysisHistory', farmId],
+    queryFn: () => historyAPI.getHistory(farmId),
+    enabled: !!farmId
+  })
+
+  // Filter logic over real database records
   const filteredEvents = historyEvents.filter(e => {
-    const matchesSearch = e.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          e.desc.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCrop = selectedCrop === 'All' || e.crop === selectedCrop
-    const matchesSeverity = selectedSeverity === 'All' || e.severity === selectedSeverity
-    const matchesStatus = selectedStatus === 'All' || e.status === selectedStatus
+    const matchesSearch = (e.primary_issue || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          (e.diagnostic_summary || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (e.action || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (e.farm_name || '').toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCrop = selectedCrop === 'All' || e.crop?.toLowerCase() === selectedCrop.toLowerCase()
+    const matchesSeverity = selectedSeverity === 'All' || e.severity?.toLowerCase() === selectedSeverity.toLowerCase()
+    const matchesStatus = selectedStatus === 'All' || e.overall_status?.toLowerCase() === selectedStatus.toLowerCase()
     return matchesSearch && matchesCrop && matchesSeverity && matchesStatus
   })
 
-  // Chart data calculations: Count of events by type
+  // Dynamic Chart data from REAL events
+  const severityCounts = {
+    Critical: historyEvents.filter(e => e.severity === 'Critical').length,
+    High: historyEvents.filter(e => e.severity === 'High').length,
+    Moderate: historyEvents.filter(e => e.severity === 'Moderate').length,
+    Low: historyEvents.filter(e => e.severity === 'Low' || e.severity === 'None').length
+  }
+
   const chartData = [
-    { name: 'Disease Scans', count: historyEvents.filter(e => e.type === 'disease').length, color: '#FFB300' },
-    { name: 'Sensor Alerts', count: historyEvents.filter(e => e.type === 'sensor').length, color: '#ef4444' },
-    { name: 'Weather Events', count: historyEvents.filter(e => e.type === 'weather').length, color: '#3b82f6' },
-    { name: 'Advisories', count: historyEvents.filter(e => e.type === 'rec').length, color: '#8b5cf6' },
-    { name: 'Treatments', count: historyEvents.filter(e => e.type === 'treatment').length, color: '#2E7D32' },
+    { name: t("High Risk"), count: severityCounts.Critical + severityCounts.High, color: '#dc2626' },
+    { name: t("Moderate Risk"), count: severityCounts.Moderate, color: '#f59e0b' },
+    { name: t("Optimal"), count: severityCounts.Low, color: '#16a34a' }
   ]
 
-  const getEventIcon = (type: string) => {
-    switch (type) {
-      case 'disease':
-        return <Camera className="h-4.5 w-4.5 text-highlight dark:text-highlight-300" />
-      case 'weather':
-        return <CloudSun className="h-4.5 w-4.5 text-blue-500" />
-      case 'sensor':
-        return <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
-      case 'rec':
-        return <Layers className="h-4.5 w-4.5 text-purple-500" />
-      case 'treatment':
-        return <CheckCircle2 className="h-4.5 w-4.5 text-primary dark:text-primary-300" />
-      default:
-        return <HelpCircle className="h-4.5 w-4.5 text-slate-500 dark:text-slate-400" />
+  const getEventIcon = (item: AnalysisHistoryItem) => {
+    if (item.disease && item.disease !== 'Unknown' && item.disease !== 'Normal Leaf') {
+      return <Camera className="h-4.5 w-4.5 text-amber-500" />
     }
+    if (item.severity === 'Critical' || item.severity === 'High') {
+      return <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
+    }
+    if (item.ndvi_mean !== undefined && item.ndvi_mean !== null) {
+      return <Layers className="h-4.5 w-4.5 text-primary dark:text-primary-300" />
+    }
+    return <CheckCircle2 className="h-4.5 w-4.5 text-primary dark:text-primary-300" />
   }
 
   const getSeverityBadge = (sev: string) => {
+    const localized = localizeSeverity(sev)
     switch (sev) {
+      case 'Critical':
       case 'High':
-        return <Badge variant="destructive" className="text-[9px] py-0 font-bold uppercase tracking-wider">High</Badge>
+        return <Badge variant="destructive" className="text-[9px] py-0 font-bold uppercase tracking-wider">{localized}</Badge>
       case 'Moderate':
-        return <Badge variant="warning" className="text-[9px] py-0 font-bold uppercase tracking-wider">Moderate</Badge>
+        return <Badge variant="warning" className="text-[9px] py-0 font-bold uppercase tracking-wider">{localized}</Badge>
       default:
-        return <Badge variant="success" className="text-[9px] py-0 font-bold uppercase tracking-wider">Low</Badge>
+        return <Badge variant="success" className="text-[9px] py-0 font-bold uppercase tracking-wider">{localized}</Badge>
     }
   }
 
   const getStatusBadge = (st: string) => {
     switch (st) {
-      case 'Applied':
-        return <Badge className="bg-[#2E7D32] text-white text-[8px] py-0 px-1.5 font-bold uppercase"><CheckCircle className="h-3 w-3 mr-1 shrink-0" /> Applied</Badge>
-      case 'Resolved':
-        return <Badge className="bg-blue-600 text-white text-[8px] py-0 px-1.5 font-bold uppercase"><CheckCircle className="h-3 w-3 mr-1 shrink-0" /> Resolved</Badge>
+      case 'Attention Required':
+        return <Badge className="bg-red-600 text-white text-[8px] py-0 px-1.5 font-bold uppercase"><ShieldAlert className="h-3 w-3 mr-1 shrink-0" /> {t("Needs Attention")}</Badge>
+      case 'Analysis Incomplete':
+        return <Badge className="bg-amber-600 text-white text-[8px] py-0 px-1.5 font-bold uppercase"><HelpCircle className="h-3 w-3 mr-1 shrink-0" /> {t("Unstable")}</Badge>
       default:
-        return <Badge className="bg-amber-500 text-white text-[8px] py-0 px-1.5 font-bold uppercase"><ShieldAlert className="h-3 w-3 mr-1 shrink-0" /> Pending</Badge>
+        return <Badge className="bg-[#2E7D32] text-white text-[8px] py-0 px-1.5 font-bold uppercase"><CheckCircle className="h-3 w-3 mr-1 shrink-0" /> {t("Optimal")}</Badge>
     }
   }
 
@@ -200,195 +142,393 @@ export default function History() {
     <div className="space-y-6">
       
       {/* Page Header */}
-      <div className="pb-4">
-        <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">Analysis & Event History</h1>
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-2">
-          Chronological historical logs of crop diagnoses, weather indicators, sensor alerts, and treatment applications.
-        </p>
+      <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-center md:space-y-0 pb-4">
+        <div>
+          <div className="flex items-center space-x-2">
+            <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+              {t("Analysis History")}
+            </h1>
+            <Badge variant="outline" className="text-xs font-bold px-2.5 py-0.5 rounded-lg border-primary text-primary">
+              {currentFarm?.name || `Farm #${farmId}`} ({localizeCrop(currentFarm?.crop_type)})
+            </Badge>
+          </div>
+          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-2">
+            {t("Chronological logging of synthesized agronomic recommendations.")}
+          </p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Button 
+            variant="outline" 
+            onClick={() => refetch()} 
+            disabled={isRefetching}
+            className="rounded-xl border-slate-200 dark:border-white/10 text-xs font-bold"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefetching ? 'animate-spin' : ''}`} /> {t("Refresh Analysis")}
+          </Button>
+          <Button 
+            onClick={() => navigate('/app/leaf-inference')} 
+            className="bg-primary hover:bg-primary-600 text-white shadow-premium rounded-xl px-5 py-2.5 text-xs font-bold"
+          >
+            <Sparkles className="h-3.5 w-3.5 mr-1.5" /> {t("Run Analysis")}
+          </Button>
+        </div>
       </div>
 
-      {/* ─── CHARTS SUMMARIZING EVENT HISTORY ────────────────────────────────────── */}
-      <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
-        <CardContent className="p-8">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Historical Events Distribution</span>
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ left: -30, right: 10, top: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} opacity={0.5} />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-                <Tooltip cursor={{ fill: '#f8fafc', opacity: 0.5 }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                <Bar dataKey="count" fill="#2E7D32" radius={[8, 8, 0, 0]} maxBarSize={40}>
-                  {chartData.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+      {isLoading ? (
+        <div className="space-y-6">
+          <Skeleton className="h-64 rounded-2xl w-full" />
+          <div className="space-y-3">
+            <Skeleton className="h-24 rounded-xl w-full" />
+            <Skeleton className="h-24 rounded-xl w-full" />
+            <Skeleton className="h-24 rounded-xl w-full" />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      ) : (
+        <>
+          {/* ─── CHARTS SUMMARIZING REAL EVENT HISTORY ────────────────────────────────────── */}
+          {historyEvents.length > 0 && (
+            <Card className="rounded-[2rem] shadow-premium border-slate-200/70 dark:border-white/10">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
+                    {t("Farm Health Score")} ({historyEvents.length} {t("Active")})
+                  </span>
+                  <span className="text-xs font-semibold text-slate-500">{t("Farm")}: {currentFarm?.name}</span>
+                </div>
+                <div className="h-56 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData} margin={{ left: -25, right: 10, top: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} opacity={0.5} />
+                      <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                      <Tooltip 
+                        cursor={{ fill: '#f8fafc', opacity: 0.5 }} 
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} 
+                      />
+                      <Bar dataKey="count" fill="#2E7D32" radius={[8, 8, 0, 0]} maxBarSize={48}>
+                        {chartData.map((entry, idx) => (
+                          <Cell key={`cell-${idx}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-      {/* ─── DYNAMIC FILTERING & SEARCH BAR ─────────────────────────────────────── */}
-      <Card className="bg-slate-50 dark:bg-dark-elevated border-slate-200/70 dark:border-white/5 rounded-[2rem] shadow-sm">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input
-                type="text"
-                placeholder="Search historical logs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
+          {/* ─── DYNAMIC FILTERING & SEARCH BAR ─────────────────────────────────────── */}
+          <Card className="bg-slate-50 dark:bg-dark-elevated border-slate-200/70 dark:border-white/5 rounded-[2rem] shadow-sm">
+            <CardContent className="p-4 space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                
+                {/* Search Input */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="text"
+                    placeholder={t("Search history...")}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
 
-            {/* Filter Toggle headers */}
-            <div className="flex items-center space-x-2 shrink-0 text-slate-500 dark:text-slate-400 font-bold text-xs">
-              <SlidersHorizontal className="h-4.5 w-4.5" />
-              <span>Filters</span>
-            </div>
-          </div>
-
-          {/* Filtering selectors */}
-          <div className="grid gap-3 grid-cols-2 md:grid-cols-4 text-xs font-semibold">
-            {/* Crop select */}
-            <div className="space-y-1">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Crop type</span>
-              <select
-                value={selectedCrop}
-                onChange={(e) => setSelectedCrop(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
-              >
-                <option value="All">All Crops</option>
-                <option value="Rice">Rice</option>
-                <option value="Mango">Mango</option>
-                <option value="Wheat">Wheat</option>
-                <option value="Cotton">Cotton</option>
-                <option value="Barley">Barley</option>
-              </select>
-            </div>
-
-            {/* Severity select */}
-            <div className="space-y-1">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Severity level</span>
-              <select
-                value={selectedSeverity}
-                onChange={(e) => setSelectedSeverity(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
-              >
-                <option value="All">All Severities</option>
-                <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
-                <option value="High">High</option>
-              </select>
-            </div>
-
-            {/* Status select */}
-            <div className="space-y-1">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Status type</span>
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
-              >
-                <option value="All">All Statuses</option>
-                <option value="Pending">Pending</option>
-                <option value="Resolved">Resolved</option>
-                <option value="Applied">Applied</option>
-              </select>
-            </div>
-
-            {/* Date filter dropdown shortcut */}
-            <div className="space-y-1">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Date Interval</span>
-              <select
-                disabled
-                className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-400 focus:outline-none"
-              >
-                <option value="All">All Time Logs</option>
-              </select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* ─── TIMELINE SECTION ────────────────────────────────────────────────────── */}
-      <div className="relative border-l-2 border-slate-100 dark:border-white/5 pl-6 ml-4 space-y-6 pt-2">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
-            <div key={event.id} className="relative group">
-              
-              {/* Timeline Pin Dot */}
-              <div className="absolute -left-[32.5px] top-1 bg-white dark:bg-dark-surface h-5 w-5 rounded-full border-2 border-slate-100 dark:border-white/5 group-hover:border-[#2E7D32] flex items-center justify-center transition shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 group-hover:bg-[#2E7D32]" />
+                {/* Filter Toggle headers */}
+                <div className="flex items-center space-x-2 shrink-0 text-slate-500 dark:text-slate-400 font-bold text-xs">
+                  <SlidersHorizontal className="h-4.5 w-4.5" />
+                  <span>{t("Analytics")}</span>
+                </div>
               </div>
 
-              {/* Timeline Event Card */}
-              <Card className="hover:border-slate-200 dark:border-white/10 transition-all bg-white dark:bg-dark-surface shadow-sm">
-                <CardContent className="p-4 space-y-3">
-                  
-                  {/* Card Header: Type, Crop Badge, Date */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-white/5/50 pb-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/10 dark:bg-white dark:bg-dark-surface/5/30 border border-slate-200 dark:border-white/10/20">
-                        {getEventIcon(event.type)}
-                      </div>
-                      <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
-                        {event.type === 'rec' ? 'Agronomist Advisory' : event.type.replace('_', ' ')}
-                      </span>
+              {/* Filtering selectors */}
+              <div className="grid gap-3 grid-cols-2 md:grid-cols-4 text-xs font-semibold">
+                {/* Crop select */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Crop")}</span>
+                  <select
+                    value={selectedCrop}
+                    onChange={(e) => setSelectedCrop(e.target.value)}
+                    className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                  >
+                    <option value="All">{t("All Crops")}</option>
+                    <option value="Bajra">{localizeCrop('Bajra')}</option>
+                    <option value="Banana">{localizeCrop('Banana')}</option>
+                    <option value="Cotton">{localizeCrop('Cotton')}</option>
+                    <option value="Jowar">{localizeCrop('Jowar')}</option>
+                    <option value="Onion">{localizeCrop('Onion')}</option>
+                    <option value="Orange">{localizeCrop('Orange')}</option>
+                    <option value="Rice">{localizeCrop('Rice')}</option>
+                    <option value="Soybean">{localizeCrop('Soybean')}</option>
+                    <option value="Sugarcane">{localizeCrop('Sugarcane')}</option>
+                    <option value="Wheat">{localizeCrop('Wheat')}</option>
+                  </select>
+                </div>
+
+                {/* Severity select */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Threat")}</span>
+                  <select
+                    value={selectedSeverity}
+                    onChange={(e) => setSelectedSeverity(e.target.value)}
+                    className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                  >
+                    <option value="All">{t("All Severities")}</option>
+                    <option value="Critical">{t("Critical")}</option>
+                    <option value="High">{t("High")}</option>
+                    <option value="Moderate">{t("Moderate")}</option>
+                    <option value="Low">{t("Low")}</option>
+                  </select>
+                </div>
+
+                {/* Status select */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">{t("Health")}</span>
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="flex h-9.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-surface px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
+                  >
+                    <option value="All">{t("Optimal Baseline")}</option>
+                    <option value="Optimal">{t("Optimal")}</option>
+                    <option value="Attention Required">{t("Needs Attention")}</option>
+                    <option value="Analysis Incomplete">{t("Unstable")}</option>
+                  </select>
+                </div>
+
+                {/* Clear filters */}
+                <div className="space-y-1 flex flex-col justify-end">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => { setSearchQuery(''); setSelectedCrop('All'); setSelectedSeverity('All'); setSelectedStatus('All') }}
+                    className="h-9.5 text-xs text-slate-500 hover:text-slate-800 font-bold"
+                  >
+                    {t("Cleared")}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ─── TIMELINE SECTION ────────────────────────────────────────────────────── */}
+          <div className="relative border-l-2 border-slate-100 dark:border-white/5 pl-6 ml-4 space-y-6 pt-2">
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map((event) => {
+                const itemProblem = localizeThreat(event.primary_issue)
+                const itemSummary = localizeRationale(event.diagnostic_summary)
+                const itemAction = localizeAction(event.action)
+
+                return (
+                  <div key={event.id} className="relative group cursor-pointer" onClick={() => setSelectedAnalysis(event)}>
+                    
+                    {/* Timeline Pin Dot */}
+                    <div className="absolute -left-[32.5px] top-1 bg-white dark:bg-dark-surface h-5 w-5 rounded-full border-2 border-slate-100 dark:border-white/5 group-hover:border-primary flex items-center justify-center transition shadow-sm">
+                      <span className="h-1.5 w-1.5 rounded-full bg-slate-400 group-hover:bg-primary" />
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <span className="text-[10px] text-slate-400 font-mono flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" /> {event.date}
-                      </span>
-                      <Badge variant="secondary" className="text-[9px] py-0 font-bold uppercase tracking-wide">
-                        <Sprout className="h-3 w-3 mr-1 text-primary dark:text-primary-300" /> {event.crop}
-                      </Badge>
-                    </div>
+                    {/* Timeline Event Card */}
+                    <Card className="hover:border-primary/50 dark:border-white/10 transition-all bg-white dark:bg-dark-surface shadow-sm hover:shadow-md">
+                      <CardContent className="p-5 space-y-3">
+                        
+                        {/* Card Header: Type, Crop Badge, Date */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-white/5 pb-2.5">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                              {getEventIcon(event)}
+                            </div>
+                            <span className="text-xs font-bold text-slate-900 dark:text-white">
+                              {itemProblem || t('Optimal Growth Baseline')}
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-mono">
+                              #{event.id}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <span className="text-[10px] text-slate-400 font-mono flex items-center">
+                              <Calendar className="h-3 w-3 mr-1" /> {event.timestamp || event.date}
+                            </span>
+                            <Badge variant="secondary" className="text-[9px] py-0 font-bold uppercase tracking-wide">
+                              <Sprout className="h-3 w-3 mr-1 text-primary dark:text-primary-300" /> {localizeCrop(event.crop)}
+                            </Badge>
+                            <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-primary transition" />
+                          </div>
+                        </div>
+
+                        {/* Card Body: Title & Description */}
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-slate-600 dark:text-slate-300 line-clamp-2">
+                            {itemSummary}
+                          </p>
+                          {itemAction && (
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 italic">
+                              {t("Action")}: {itemAction}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Card Footer: Severity, Status & Quick Metrics */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-white/5 text-xs">
+                          <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-1">
+                              <span className="text-[9px] text-slate-400 font-semibold uppercase">{t("Threat")}:</span>
+                              {getSeverityBadge(event.severity)}
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <span className="text-[9px] text-slate-400 font-semibold uppercase">{t("Health")}:</span>
+                              {getStatusBadge(event.overall_status)}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-2 text-[10px] font-mono text-slate-500">
+                            {event.health_score !== undefined && (
+                              <span className="bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded border border-slate-200 dark:border-white/10 font-bold">
+                                {t("Health")}: {event.health_score}/100
+                              </span>
+                            )}
+                            {event.ndvi_mean !== undefined && event.ndvi_mean !== null && (
+                              <span className="bg-primary-50 dark:bg-primary-950/30 text-primary px-2 py-0.5 rounded border border-primary/20 font-bold">
+                                NDVI: {event.ndvi_mean.toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                      </CardContent>
+                    </Card>
+
                   </div>
+                )
+              })
+            ) : (
+              <div className="text-center py-16 px-4 bg-white dark:bg-dark-surface rounded-[2rem] border border-slate-200/70 dark:border-white/10 shadow-sm space-y-3">
+                <Info className="h-8 w-8 mx-auto text-slate-400" />
+                <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                  {t("No historical analysis records found for this farm.")}
+                </h3>
+                <p className="text-xs text-slate-500 max-w-md mx-auto">
+                  {t("Knowledge-driven Agricultural Intelligence for Sustainability.")}
+                </p>
+                <div className="pt-2">
+                  <Button 
+                    onClick={() => navigate('/app/leaf-inference')} 
+                    className="bg-primary hover:bg-primary-600 text-white rounded-xl px-4 py-2 text-xs font-bold"
+                  >
+                    {t("Run Analysis")}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
-                  {/* Card Body: Title & Description */}
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{event.title}</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{event.desc}</p>
-                  </div>
-
-                  {/* Card Footer: Severity, Status & Action Info */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-white/5/40 text-xs">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[9px] text-slate-400 font-semibold uppercase">Severity:</span>
-                        {getSeverityBadge(event.severity)}
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[9px] text-slate-400 font-semibold uppercase">Status:</span>
-                        {getStatusBadge(event.status)}
-                      </div>
-                    </div>
-
-                    {event.actionLabel && (
-                      <span className="text-[10px] font-bold text-primary dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded border border-[#2e7d32]/10">
-                        {event.actionLabel}
-                      </span>
-                    )}
-                  </div>
-
-                </CardContent>
-              </Card>
-
+      {/* ─── HISTORICAL DETAIL MODAL (STORED RESULT SNAPSHOT) ───────────────────────── */}
+      <Modal
+        isOpen={!!selectedAnalysis}
+        onClose={() => setSelectedAnalysis(null)}
+        title={`${t("View Snapshot Details")} #${selectedAnalysis?.id} — ${selectedAnalysis?.farm_name}`}
+        className="md:max-w-2xl"
+      >
+        {selectedAnalysis && (
+          <div className="space-y-6 text-xs text-slate-700 dark:text-slate-300">
+            
+            {/* Header info badge block */}
+            <div className="flex flex-wrap items-center justify-between gap-2 p-4 bg-slate-50 dark:bg-dark-elevated rounded-xl border border-slate-200/70 dark:border-white/10">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">{t("Crop")}</span>
+                <span className="text-sm font-black text-slate-900 dark:text-white">
+                  {selectedAnalysis.farm_name} ({localizeCrop(selectedAnalysis.crop)})
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">{t("Latest Capture")}</span>
+                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                  {selectedAnalysis.timestamp}
+                </span>
+              </div>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-12 text-xs text-slate-400">
-            No events match your current filter parameters.
+
+            {/* Health & Severity Badges */}
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="p-3 bg-white dark:bg-dark-surface border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
+                <span className="text-[9px] uppercase font-bold text-slate-400 block">{t("System Health Index")}</span>
+                <span className="text-lg font-black text-primary">{selectedAnalysis.health_score}/100</span>
+              </div>
+              <div className="p-3 bg-white dark:bg-dark-surface border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
+                <span className="text-[9px] uppercase font-bold text-slate-400 block">{t("Threat")}</span>
+                <div className="mt-1">{getSeverityBadge(selectedAnalysis.severity)}</div>
+              </div>
+              <div className="p-3 bg-white dark:bg-dark-surface border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
+                <span className="text-[9px] uppercase font-bold text-slate-400 block">{t("Health")}</span>
+                <div className="mt-1">{getStatusBadge(selectedAnalysis.overall_status)}</div>
+              </div>
+            </div>
+
+            {/* Threat & Diagnostic Summary */}
+            <div className="p-4 bg-white dark:bg-dark-surface border border-slate-200 dark:border-white/10 rounded-xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                  {t("AI Model Diagnosis")}
+                </span>
+                {selectedAnalysis.ai_confidence ? (
+                  <span className="text-[10px] font-mono font-bold text-slate-500">
+                    {t("Confidence")}: {(selectedAnalysis.ai_confidence * 100).toFixed(1)}%
+                  </span>
+                ) : null}
+              </div>
+              <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                {localizeThreat(selectedAnalysis.primary_issue)}
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
+                {localizeRationale(selectedAnalysis.diagnostic_summary)}
+              </p>
+            </div>
+
+            {/* Agronomist Advisory Directive */}
+            <div className="p-4 bg-primary-50/50 dark:bg-primary-950/20 border border-primary/20 rounded-xl space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center">
+                <Award className="h-4 w-4 mr-1 text-primary" /> {t("Agronomist Advisory Directive")}
+              </span>
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                {localizeAction(selectedAnalysis.action)}
+              </p>
+            </div>
+
+            {/* Stored Environmental Telemetry */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                {t("Canopy Weather & Telemetry")}
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div className="p-2.5 bg-slate-50 dark:bg-dark-elevated rounded-lg border border-slate-200/60 dark:border-white/5">
+                  <span className="text-[9px] text-slate-400 block">{t("Temperature")}</span>
+                  <span className="font-bold">{selectedAnalysis.temperature ? `${selectedAnalysis.temperature}°C` : 'N/A'}</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 dark:bg-dark-elevated rounded-lg border border-slate-200/60 dark:border-white/5">
+                  <span className="text-[9px] text-slate-400 block">{t("Humidity")}</span>
+                  <span className="font-bold">{selectedAnalysis.humidity ? `${selectedAnalysis.humidity}%` : 'N/A'}</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 dark:bg-dark-elevated rounded-lg border border-slate-200/60 dark:border-white/5">
+                  <span className="text-[9px] text-slate-400 block">Sentinel-2 NDVI</span>
+                  <span className="font-bold">{selectedAnalysis.ndvi_mean !== undefined && selectedAnalysis.ndvi_mean !== null ? selectedAnalysis.ndvi_mean.toFixed(3) : 'N/A'}</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 dark:bg-dark-elevated rounded-lg border border-slate-200/60 dark:border-white/5">
+                  <span className="text-[9px] text-slate-400 block">{t("Stress")}</span>
+                  <span className="font-bold">{selectedAnalysis.stress_pct !== undefined && selectedAnalysis.stress_pct !== null ? `${selectedAnalysis.stress_pct}%` : 'Normal'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <Button onClick={() => setSelectedAnalysis(null)} className="rounded-xl px-5 py-2 text-xs font-bold">
+                {t("Close")}
+              </Button>
+            </div>
+
           </div>
         )}
-      </div>
+      </Modal>
 
     </div>
   )

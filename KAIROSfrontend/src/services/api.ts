@@ -5,14 +5,17 @@ import {
   SatelliteData,
   Recommendation,
   DashboardData,
-  User
+  User,
+  AnalysisHistoryItem,
+  MarketIntelligenceResponse,
+  MarketDashboardSummary
 } from '@/types'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
 const client = axios.create({
   baseURL: API_BASE,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,18 +25,13 @@ const client = axios.create({
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem("kairos_token");
 
-  console.log("TOKEN:", token);
-
   if (token) {
-    console.log("ATTACHING TOKEN", token);
     if (config.headers && typeof config.headers.set === 'function') {
       config.headers.set('Authorization', `Bearer ${token}`);
     } else {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-  } else {
-    console.log("NO TOKEN FOUND");
   }
 
   return config;
@@ -220,6 +218,34 @@ export const weatherAPI = {
   get: async (farmId: number) => {
     const res = await client.get('/weather', { params: { farm_id: farmId } })
     return res.data
+  },
+  getFarmWeather: async (farmId: number): Promise<any> => {
+    const res = await client.get(`/weather/farm/${farmId}`)
+    return res.data
+  },
+  getAlerts: async (farmId: number): Promise<any> => {
+    const res = await client.get(`/weather/alerts/${farmId}`)
+    return res.data
+  },
+  evaluateAlerts: async (payload: { farm_id: number; force_send?: boolean; language?: string }): Promise<any> => {
+    const res = await client.post('/weather/alerts/evaluate', payload)
+    return res.data
+  },
+  sendTestWhatsApp: async (payload: { phone: string; crop: string; language: string; severity?: string }): Promise<any> => {
+    const res = await client.post('/weather/alerts/send-whatsapp', payload)
+    return res.data
+  },
+  getThresholds: async (): Promise<any> => {
+    const res = await client.get('/weather/thresholds')
+    return res.data
+  },
+  syncFarmLanguage: async (payload: { farm_id: number; language: string }): Promise<any> => {
+    const res = await client.post('/weather/auto-dispatch/sync-language', payload)
+    return res.data
+  },
+  triggerAutoDispatch: async (payload: { farm_id: number; language?: string }): Promise<any> => {
+    const res = await client.post('/weather/auto-dispatch/trigger', payload)
+    return res.data
   }
 }
 
@@ -242,7 +268,7 @@ export const satelliteAPI = {
 
 export const aiAPI = {
   analyzeLeaf: async (formData: FormData): Promise<any> => {
-    const res = await client.post('/api/ai/analyze-leaf', formData, {
+    const res = await client.post('/ai/analyze-leaf', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -250,18 +276,58 @@ export const aiAPI = {
     return res.data
   },
 
+  detectPest: async (formData: FormData): Promise<any> => {
+    const res = await client.post('/ai/detect-pest', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return res.data
+  },
+
+  forecastPest: async (payload: any): Promise<any> => {
+    const res = await client.post('/ai/forecast-pest', payload)
+    return res.data
+  },
+
+  forecastDisease: async (payload: any): Promise<any> => {
+    const res = await client.post('/ai/forecast-disease', payload)
+    return res.data
+  },
+
+  getForecastOptions: async (): Promise<any> => {
+    const res = await client.get('/ai/forecast-options')
+    return res.data
+  },
+
   getHistory: async (farmId: number): Promise<any> => {
-    const res = await client.get('/api/ai/history', { params: { farm_id: farmId } })
+    const res = await client.get('/ai/history', { params: { farm_id: farmId } })
     return res.data
   }
 }
+
+export const cameraAPI = {
+  listCameras: async (): Promise<any> => {
+    const res = await client.get('/camera/list')
+    return res.data
+  },
+  getStats: async (): Promise<any> => {
+    const res = await client.get('/camera/stats')
+    return res.data
+  },
+  scanLeaf: async (payload: { crop: string; camera_id?: string; farm_id?: number }): Promise<any> => {
+    const res = await client.post('/camera/scan', payload)
+    return res.data
+  }
+}
+
 export const recommendationAPI = {
   get: async (farmId: number): Promise<Recommendation> => {
     try {
       const res = await client.get('/recommendation', { params: { farm_id: farmId } })
       return res.data
     } catch {
-      return { farm_id: farmId, health_score: 0, type: "", severity: "", problem: "", reason: "", action: "" }
+      return { farm_id: farmId, health_score: 0, type: "Error", severity: "Unknown", problem: "System Timeout", reason: "The recommendation engine took too long to respond. The LLM might be experiencing high demand or analyzing complex data.", action: "Please try running the analysis again in a few moments." }
     }
   },
 
@@ -275,10 +341,54 @@ export const recommendationAPI = {
   }
 }
 
-export const chatAPI = {
-  sendMessage: async (message: string, language: string = 'en'): Promise<string> => {
+export const analysisAPI = {
+  run: async (farmId: number): Promise<any> => {
+    const res = await client.post('/analysis/run', { farm_id: farmId })
+    return res.data
+  },
+  getHistory: async (farmId?: number): Promise<AnalysisHistoryItem[]> => {
     try {
-      const res = await client.post('/api/ai/chat', { message, language })
+      const res = await client.get('/analysis/history', { params: { farm_id: farmId } })
+      return res.data
+    } catch {
+      return []
+    }
+  }
+}
+
+export const historyAPI = {
+  getHistory: async (farmId?: number): Promise<AnalysisHistoryItem[]> => {
+    try {
+      const res = await client.get('/analysis/history', { params: { farm_id: farmId } })
+      return res.data
+    } catch {
+      return []
+    }
+  },
+  getDetail: async (analysisId: number, farmId?: number): Promise<AnalysisHistoryItem | null> => {
+    try {
+      const res = await client.get(`/analysis/history/${analysisId}`, { params: { farm_id: farmId } })
+      return res.data
+    } catch {
+      return null
+    }
+  }
+}
+
+export const chatAPI = {
+  sendMessage: async (
+    message: string, 
+    language: string = 'en', 
+    farmId?: number, 
+    history: Array<{ role: string; content: string }> = []
+  ): Promise<string> => {
+    try {
+      const res = await client.post('/ai/assistant/chat', { 
+        message, 
+        language,
+        farm_id: farmId || 1,
+        history
+      })
       if (res.data && res.data.success) {
         return res.data.response
       }
@@ -287,7 +397,53 @@ export const chatAPI = {
       if (error.response && error.response.data && error.response.data.error) {
         throw new Error(error.response.data.error)
       }
-      throw new Error("Failed to connect to AI server.")
+      throw new Error("Failed to connect to AI Assistant server.")
+    }
+  },
+
+  transcribeAudio: async (audioBlob: Blob, language: string = 'en'): Promise<string> => {
+    try {
+      const formData = new FormData()
+      formData.append('audio', audioBlob, 'recording.webm')
+      formData.append('language', language)
+
+      const res = await client.post('/ai/transcribe-audio', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+
+      if (res.data && res.data.success) {
+        return res.data.transcript || ''
+      }
+      throw new Error(res.data?.error || "Audio transcription failed")
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.error) {
+        throw new Error(error.response.data.error)
+      }
+      throw error
     }
   }
 }
+
+export const marketAPI = {
+  getPrices: async (farmId?: number, crop?: string, state: string = 'Maharashtra'): Promise<MarketIntelligenceResponse> => {
+    const res = await client.get('/market/prices', {
+      params: { farm_id: farmId, crop, state }
+    })
+    return res.data
+  },
+
+  getSummary: async (farmId?: number, crop?: string, state: string = 'Maharashtra'): Promise<MarketDashboardSummary> => {
+    const res = await client.get('/market/summary', {
+      params: { farm_id: farmId, crop, state }
+    })
+    return res.data
+  },
+
+  getHistory: async (crop: string = 'Rice', state: string = 'Maharashtra') => {
+    const res = await client.get('/market/history', {
+      params: { crop, state }
+    })
+    return res.data
+  }
+}
+

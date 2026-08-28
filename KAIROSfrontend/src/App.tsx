@@ -13,6 +13,10 @@ const Farms = lazy(() => import('@/pages/Farms'))
 const IoTMonitoring = lazy(() => import('@/pages/IoTMonitoring'))
 const SatelliteAnalysis = lazy(() => import('@/pages/Satellite'))
 const LeafInference = lazy(() => import('@/pages/LeafInference'))
+const PestDetection = lazy(() => import('@/pages/PestDetection'))
+const EarlyDetection = lazy(() => import('@/pages/EarlyDetection'))
+const MarketPrices = lazy(() => import('@/pages/MarketPrices'))
+const WeatherIntelligence = lazy(() => import('@/pages/WeatherIntelligence'))
 const Recommendations = lazy(() => import('@/pages/Recommendations'))
 const History = lazy(() => import('@/pages/History'))
 const Settings = lazy(() => import('@/pages/Settings'))
@@ -49,6 +53,12 @@ export default function App() {
               <Route path="iot" element={<IoTMonitoring />} />
               <Route path="satellite" element={<SatelliteAnalysis />} />
               <Route path="leaf-scan" element={<LeafInference />} />
+              <Route path="pest-detection" element={<PestDetection />} />
+              <Route path="early-detection" element={<EarlyDetection />} />
+              <Route path="weather" element={<WeatherIntelligence />} />
+              <Route path="weather-intelligence" element={<WeatherIntelligence />} />
+              <Route path="market-prices" element={<MarketPrices />} />
+              <Route path="market" element={<MarketPrices />} />
               <Route path="recommendations" element={<Recommendations />} />
               <Route path="history" element={<History />} />
               <Route path="settings" element={<Settings />} />

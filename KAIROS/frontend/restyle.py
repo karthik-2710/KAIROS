@@ -60,15 +60,15 @@ def replace_styles(content):
     # Generic generic replacements for text, bg, border
     for old_color, semantic in color_map.items():
         # Text
-        content = re.sub(fr'text-{old_color}-\d00', f'text-[var(--color-{semantic})]', content)
+        content = re.sub(fr'text-{old_color}-\d00', 'text-[var(--color-' + semantic + ')]', content)
         # Bg
-        content = re.sub(fr'bg-{old_color}-\d00', f'bg-[var(--color-{semantic})]', content)
-        content = re.sub(fr'bg-{old_color}-50(?!0)', f'bg-[var(--color-{semantic})]/15', content)
+        content = re.sub(fr'bg-{old_color}-\d00', 'bg-[var(--color-' + semantic + ')]', content)
+        content = re.sub(fr'bg-{old_color}-50(?!0)', 'bg-[var(--color-' + semantic + ')]/15', content)
         # Border
-        content = re.sub(fr'border-{old_color}-\d00', f'border-[var(--color-{semantic})]', content)
-        content = re.sub(fr'border-{old_color}-50(?!0)', f'border-[var(--color-{semantic})]/30', content)
-        content = re.sub(fr'border-{old_color}-100', f'border-[var(--color-{semantic})]/30', content)
-        content = re.sub(fr'border-{old_color}-200', f'border-[var(--color-{semantic})]', content)
+        content = re.sub(fr'border-{old_color}-\d00', 'border-[var(--color-' + semantic + ')]', content)
+        content = re.sub(fr'border-{old_color}-50(?!0)', 'border-[var(--color-' + semantic + ')]/30', content)
+        content = re.sub(fr'border-{old_color}-100', 'border-[var(--color-' + semantic + ')]/30', content)
+        content = re.sub(fr'border-{old_color}-200', 'border-[var(--color-' + semantic + ')]', content)
 
     # Some remaining gray text
     content = re.sub(r'text-gray-900', 'text-[var(--color-text-primary)]', content)

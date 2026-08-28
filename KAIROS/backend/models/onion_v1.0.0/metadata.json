@@ -1,0 +1,9 @@
+{
+    "model_version": "onion_v1.0.0",
+    "crop": "onion",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-25T04:12:29.056881",
+    "evaluation_f1": 0.9248869519984528
+}

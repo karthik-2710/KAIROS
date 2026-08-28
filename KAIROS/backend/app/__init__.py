@@ -12,6 +12,9 @@ from app.routes.ai import ai_bp
 from app.routes.recommendation import recommendation_bp
 from app.routes.dashboard import dashboard_bp
 from app.routes.analysis import analysis_bp
+from app.routes.market import market_bp
+from app.notifications import notifications_bp
+from app.routes.camera import camera_bp
 
 
 def create_app():
@@ -30,29 +33,44 @@ def create_app():
     app.register_blueprint(weather_bp)
     app.register_blueprint(satellite_bp)
     app.register_blueprint(ai_bp)
+    app.register_blueprint(ai_bp, url_prefix='/api/ai', name='ai_api_alias')
+    app.register_blueprint(camera_bp)
     app.register_blueprint(recommendation_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(analysis_bp)
+    app.register_blueprint(market_bp)
+    app.register_blueprint(notifications_bp)
     
     from modules.digital_twin.api import digital_twin_bp
     app.register_blueprint(digital_twin_bp)
 
-    # Robust Startup Diagnostics for AI Model
-    print("[Startup] Initializing AI Model diagnostics...")
+    # Robust Startup Diagnostics for AI Models
+    print("[Startup] Initializing AI Model diagnostics across 10 supported crops...")
     try:
         import torch
-        print(f"PyTorch {torch.__version__} loaded successfully\n")
+        print(f"PyTorch {torch.__version__} loaded successfully")
         
-        from app.ai.model_loader import load_model
-        model, class_names, transform = load_model()
-        if model is not None:
-            print("[Startup] PyTorch AI Model loaded successfully during app initialization.")
-        else:
-            print("[Startup] WARNING: PyTorch AI Model failed to load or is unavailable.")
+        from app.ai.model_registry import model_registry, SUPPORTED_CROPS
+        discovered = model_registry.discover_models()
+        ready_count = sum(1 for v in discovered.values() if v.get("status") == "READY")
+        print(f"[Startup] AI Model Registry initialized: {ready_count}/{len(SUPPORTED_CROPS)} crop models ready.\n")
     except Exception as e:
         import traceback
         print(f"[Startup] ERROR: Exception during AI Model initialization: {e}")
         traceback.print_exc()
+
+    # Start 10-Minute Automated WhatsApp Weather Alert Background Dispatcher
+    try:
+        from app.weather.auto_dispatcher import start_auto_dispatcher
+        start_auto_dispatcher()
+    except Exception as e:
+        print(f"[Startup] Error starting auto dispatcher: {e}")
+
+    # Static uploads handler
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        from flask import send_from_directory
+        return send_from_directory(os.path.abspath(Config.UPLOAD_FOLDER), filename)
 
     # Health check
     @app.route('/health')

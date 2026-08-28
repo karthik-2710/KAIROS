@@ -1,0 +1,9 @@
+{
+    "model_version": "sugarcane_v1.0.0",
+    "crop": "sugarcane",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-20T18:31:56.453466",
+    "evaluation_f1": 0.9517963156278592
+}

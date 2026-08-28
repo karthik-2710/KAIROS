@@ -10,6 +10,8 @@ import LeafUpload from '@/pages/LeafUpload'
 import Recommendation from '@/pages/Recommendation'
 import History from '@/pages/History'
 import DigitalTwin from '@/pages/DigitalTwin'
+import NotificationsPage from '@/pages/NotificationsPage'
+import NotificationPreferences from '@/pages/settings/NotificationPreferences'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import { useAuthStore } from '@/store/authStore'
@@ -61,6 +63,8 @@ export default function App() {
           <Route path="/recommendation" element={<Recommendation />} />
           <Route path="/history" element={<History />} />
           <Route path="/twin" element={<DigitalTwin />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/settings/notifications" element={<NotificationPreferences />} />
         </Route>
       </Routes>
     </Router>

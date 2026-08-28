@@ -1,0 +1,9 @@
+{
+    "model_version": "rice_v1.0.0",
+    "crop": "rice",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.75,
+    "creation_date": "2026-08-19T14:24:26.978474",
+    "evaluation_f1": 0.9807156422312185
+}

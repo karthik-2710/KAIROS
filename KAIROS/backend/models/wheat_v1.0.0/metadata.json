@@ -1,0 +1,9 @@
+{
+    "model_version": "wheat_v1.0.0",
+    "crop": "wheat",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.75,
+    "creation_date": "2026-08-20T14:27:21.292235",
+    "evaluation_f1": 0.8606682776784494
+}

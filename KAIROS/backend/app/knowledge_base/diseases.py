@@ -138,11 +138,11 @@ def get_disease_info(condition_name: str, is_healthy: bool = False):
     if is_healthy:
         base_data = DISEASE_KNOWLEDGE_BASE['healthy']
         return {
-            'Scientific_Name': base_data['scientific_name'],
-            'Severity': base_data['severity'],
-            'Treatment': base_data['treatment'],
-            'Prevention': base_data['prevention'],
-            'Immediate_Action': 'Continue regular monitoring and care.'
+            'scientific_name': base_data['scientific_name'],
+            'severity': base_data['severity'],
+            'treatment': base_data['treatment'],
+            'prevention': base_data['prevention'],
+            'immediate_action': 'Continue regular monitoring and care.'
         }
         
     condition_clean = condition_name.replace('_', ' ').lower()
@@ -156,17 +156,17 @@ def get_disease_info(condition_name: str, is_healthy: bool = False):
     if not base_data:
         logging.warning(f"Lookup failed for disease key: {condition_name}")
         return {
-            'Scientific_Name': 'Unknown',
-            'Severity': 'Moderate',
-            'Treatment': 'Consult a local agronomist for specific diagnosis and treatment plan.',
-            'Prevention': 'Maintain optimal crop health parameters and monitor regularly.',
-            'Immediate_Action': 'Isolate affected plants if possible and monitor spread.'
+            'scientific_name': 'Unknown',
+            'severity': 'Moderate',
+            'treatment': 'Consult a local agronomist for specific diagnosis and treatment plan.',
+            'prevention': 'Maintain optimal crop health parameters and monitor regularly.',
+            'immediate_action': 'Isolate affected plants if possible and monitor spread.'
         }
         
     return {
-        'Scientific_Name': base_data.get('scientific_name', 'Unknown'),
-        'Severity': base_data.get('severity', 'Unknown'),
-        'Treatment': base_data.get('treatment', 'Consult a specialist.'),
-        'Prevention': base_data.get('prevention', 'Monitor crop health parameters.'),
-        'Immediate_Action': base_data.get('chemical_treatment', 'Consult a specialist.')
+        'scientific_name': base_data.get('scientific_name', 'Unknown'),
+        'severity': base_data.get('severity', 'Unknown'),
+        'treatment': base_data.get('treatment', 'Consult a specialist.'),
+        'prevention': base_data.get('prevention', 'Monitor crop health parameters.'),
+        'immediate_action': base_data.get('chemical_treatment', 'Consult a specialist.')
     }

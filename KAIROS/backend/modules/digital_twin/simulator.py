@@ -33,13 +33,16 @@ def simulation_tick():
         # 1. Persist IoT Sensor Data
         cur.execute(
             """INSERT INTO sensor_data 
-               (farm_id, temperature, humidity, soil_moisture, light, mq135, scenario, ndvi, rain_detected)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               (farm_id, temperature, humidity, soil_moisture, nitrogen, phosphorus, potassium, light, mq135, scenario, ndvi, rain_detected)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 farm_id,
                 new_values['temperature'],
                 new_values['humidity'],
                 new_values['soil_moisture'],
+                int(new_values.get('nitrogen', 120)),
+                int(new_values.get('phosphorus', 40)),
+                int(new_values.get('potassium', 180)),
                 new_values['light'],
                 new_values['mq135'],
                 scenario_name,
@@ -74,24 +77,6 @@ def simulation_tick():
                            (farm_id, ndvi_mean, healthy_pct, moderate_pct, stress_pct, cloud_coverage) 
                            VALUES (?, ?, ?, ?, ?, ?)""",
                         (farm_id, new_values['ndvi'], 50.0, 30.0, 20.0, 10.0))
-
-        # 3. Persist Simulated AI Leaf Scan
-        cur.execute("SELECT id FROM leaf_scans WHERE farm_id = ? ORDER BY timestamp DESC LIMIT 1", (farm_id,))
-        scan_row = cur.fetchone()
-        if not scan_row:
-            cur.execute("INSERT INTO leaf_scans (farm_id, user_id) VALUES (?, 1)", (farm_id,))
-            scan_id = cur.lastrowid
-            cur.execute("""INSERT INTO disease_predictions 
-                           (scan_id, disease, confidence, severity, healthy) 
-                           VALUES (?, ?, ?, ?, ?)""",
-                        (scan_id, new_values['ai_prediction'], new_values['ai_confidence'], new_values['risk'], 1 if new_values['ai_prediction'] == 'Healthy' else 0))
-        else:
-            scan_id = scan_row['id']
-            cur.execute("UPDATE leaf_scans SET timestamp = datetime('now') WHERE id = ?", (scan_id,))
-            cur.execute("""UPDATE disease_predictions 
-                           SET disease = ?, confidence = ?, severity = ?, healthy = ? 
-                           WHERE scan_id = ?""",
-                        (new_values['ai_prediction'], new_values['ai_confidence'], new_values['risk'], 1 if new_values['ai_prediction'] == 'Healthy' else 0, scan_id))
 
         conn.commit()
         conn.close()

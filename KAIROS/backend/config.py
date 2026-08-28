@@ -1,11 +1,17 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+backend_env = Path(__file__).resolve().parent / '.env'
+if backend_env.exists():
+    load_dotenv(backend_env)
+else:
+    load_dotenv()
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'kairos-production-secret-key-2026-agri-ai')
     DATABASE_PATH = os.getenv('DATABASE_PATH', 'kairos.db')
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
     # OpenWeatherMap
     OPENWEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY', '')

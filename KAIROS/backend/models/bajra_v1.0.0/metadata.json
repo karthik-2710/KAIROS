@@ -1,0 +1,9 @@
+{
+    "model_version": "bajra_v1.0.0",
+    "crop": "bajra",
+    "architecture": "efficientnet_b3",
+    "input_size": 300,
+    "confidence_threshold": 0.7,
+    "creation_date": "2026-08-25T05:54:10.397000",
+    "evaluation_f1": 0.7717171717171717
+}
